@@ -20,7 +20,7 @@ const HeroSection = () => {
     >
       <div className="container mx-auto px-4">
         <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.2s' }}>
-          <p className="text-accent font-mono mb-5">Hi, my name is</p>
+          <p className="text-accent font-mono mb-5">Hi, this is Venkata Sai Siva Reddy Kolli</p>
         </div>
         
         <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.4s' }}>

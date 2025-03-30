@@ -65,8 +65,8 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Email</p>
-                    <a href="mailto:hello@example.com" className="font-medium hover:text-primary transition-colors">
-                      hello@example.com
+                    <a href="mailto:siva.kolli1993@gmail.com" className="font-medium hover:text-primary transition-colors">
+                      siva.kolli1993@gmail.com
                     </a>
                   </div>
                 </CardContent>
@@ -79,8 +79,8 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Phone</p>
-                    <a href="tel:+11234567890" className="font-medium hover:text-primary transition-colors">
-                      +1 (123) 456-7890
+                    <a href="tel:+46767852585" className="font-medium hover:text-primary transition-colors">
+                      +46767852585
                     </a>
                   </div>
                 </CardContent>
@@ -91,7 +91,7 @@ const ContactSection = () => {
               <h4 className="font-medium mb-4">Connect on social media:</h4>
               <div className="flex gap-4">
                 <a
-                  href="https://github.com"
+                  href="https://github.com/siva234"
                   target="_blank"
                   rel="noreferrer"
                   className="bg-card hover:bg-muted p-3 rounded-full transition-colors"
@@ -100,7 +100,7 @@ const ContactSection = () => {
                   <Github className="h-5 w-5" />
                 </a>
                 <a
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/in/sivareddykolli/"
                   target="_blank"
                   rel="noreferrer"
                   className="bg-card hover:bg-muted p-3 rounded-full transition-colors"
