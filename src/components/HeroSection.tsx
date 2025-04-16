@@ -1,6 +1,7 @@
 
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const HeroSection = () => {
   const scrollToProjects = () => {
@@ -19,23 +20,30 @@ const HeroSection = () => {
       className="min-h-screen flex flex-col justify-center pt-20"
     >
       <div className="container mx-auto px-4">
-        <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.2s' }}>
-          <p className="text-accent font-mono mb-5">Hi, this is Venkata Sai Siva Reddy Kolli</p>
+        <div className="flex items-center gap-6 mb-6">
+          <Avatar className="w-24 h-24 border-4 border-primary">
+            <AvatarImage 
+              src="/lovable-uploads/1dc50672-a1d0-4686-ae9f-9b41657d2bc4.png" 
+              alt="Venkata Sai Siva Reddy Kolli" 
+              className="object-cover"
+            />
+            <AvatarFallback>VSR</AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="text-accent font-mono mb-2">Hi, this is</p>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground">
+              Venkata Sai Siva Reddy Kolli
+            </h1>
+          </div>
         </div>
         
         <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.4s' }}>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 text-foreground">
-            Full Stack Developer
-          </h1>
-        </div>
-        
-        <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.6s' }}>
           <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground/70 mb-6">
-            I build exceptional digital experiences
+            Full Stack Developer
           </h2>
         </div>
         
-        <div className="animate-fade-in opacity-0 max-w-xl" style={{ animationDelay: '0.8s' }}>
+        <div className="animate-fade-in opacity-0 max-w-xl" style={{ animationDelay: '0.6s' }}>
           <p className="text-lg text-foreground/70 mb-8">
             I'm a software engineer specializing in building outstanding digital experiences.
             Currently, I'm focused on building accessible, human-centered products.
