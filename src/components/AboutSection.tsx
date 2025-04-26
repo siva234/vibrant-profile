@@ -30,14 +30,14 @@ const AboutSection = () => {
           <div className="grid grid-cols-2 gap-4">
             <Card className="bg-card/50 backdrop-blur-sm border transition-all duration-300 hover:shadow-md hover:-translate-y-1">
               <CardContent className="p-6">
-                <h3 className="text-xl font-semibold mb-1">5+</h3>
+                <h3 className="text-xl font-semibold mb-1">6+</h3>
                 <p className="text-foreground/70">Years Experience</p>
               </CardContent>
             </Card>
             
             <Card className="bg-card/50 backdrop-blur-sm border transition-all duration-300 hover:shadow-md hover:-translate-y-1">
               <CardContent className="p-6">
-                <h3 className="text-xl font-semibold mb-1">20+</h3>
+                <h3 className="text-xl font-semibold mb-1">15+</h3>
                 <p className="text-foreground/70">Projects Completed</p>
               </CardContent>
             </Card>

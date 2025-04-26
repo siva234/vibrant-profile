@@ -13,12 +13,12 @@ interface Experience {
 
 const experiences: Experience[] = [
   {
-    company: "Fintech Innovations",
-    role: "Senior Full Stack Developer",
-    period: "2022 - Present",
-    description: "Leading the development of a next-generation payment processing platform. Implementing secure API integrations with banking systems and designing responsive user interfaces for financial management.",
-    industry: "Fintech",
-    technologies: ["React", "Node.js", "TypeScript", "MongoDB", "AWS"]
+    company: "Sigma Technology AB",
+    role: "Full-Stack Developer/ Lead Developer/ Scrum Master",
+    period: "June 2021 - Jan 2025",
+    description: "",
+    industry: "Consultancy, Telecom",
+    technologies: ["React", "Node.js", "TypeScript", "Vanilla JS", "MongoDB", "AWS"]
   },
   {
     company: "Tech Consultancy Group",
@@ -29,28 +29,28 @@ const experiences: Experience[] = [
     technologies: ["React", "Java", "Spring Boot", "Docker", "Azure"]
   },
   {
-    company: "ConnectNet Systems",
-    role: "Backend Developer",
-    period: "2018 - 2020",
+    company: "Tink AB",
+    role: "Software Developer",
+    period: "Feb 2021 - May 2021",
     description: "Developed robust backend services for telecommunications platforms. Implemented microservices architecture and improved system reliability by 40%.",
-    industry: "Telecom",
-    technologies: ["Java", "Spring Boot", "Kubernetes", "PostgreSQL", "RabbitMQ"]
+    industry: "Fintech",
+    technologies: ["JavaScript", "Typescript", "React", "Node", "Git", "Jira", "Scrum"]
   },
   {
-    company: "GameVerse Studios",
-    role: "Frontend Developer",
-    period: "2016 - 2018",
-    description: "Created interactive UIs for web-based gaming platforms. Implemented real-time features and optimized rendering performance for complex game interfaces.",
+    company: "Adventure Box Technology AB",
+    role: "Software Developer",
+    period: "Feb 2020 - Aug 2020",
+    description: "As part of the Scrum-based team Siva developed and maintained adventurebox.com, a web platform for developing, publishing and playing voxel games for all age groups. He built the modifed homepage completely based on React.",
     industry: "Gaming",
-    technologies: ["JavaScript", "React", "WebSockets", "HTML5 Canvas", "CSS3"]
+    technologies: ["JavaScript", "Typescript", "React", "Java", "Docker", "Bash", "MongoDB", "AWS", "Maven", "Git", "Jira", "Scrum"]
   },
   {
-    company: "IoT Solutions Inc",
-    role: "Junior Developer",
-    period: "2015 - 2016",
-    description: "Built data visualization dashboards for IoT devices. Worked on REST APIs for device communication and data processing pipelines.",
+    company: "HMS Industrial Networks AB",
+    role: "Software Developer",
+    period: "Jan 2018 - Feb 2020",
+    description: "As part of the Scrum-based team Siva developed and maintained Netbiter, a web platform (system based on micro-services using REST API) for monitoring and controlling data from HMS IoT products deployed in industrial precision systems. He also built a test environment for simulating real-time conditions for our IoT products with the new updates.He worked with DevOps deployments, auto-scaling, certifcations, etc on AWS. And automated some daily tasks in the team with bash scripts.",
     industry: "IoT",
-    technologies: ["JavaScript", "Node.js", "Express", "MongoDB", "D3.js"]
+    technologies: ["Java", "SpringBoot", "Docker", "Bash", "Sql", "Aws", "Maven", "Git", "Jenkins", "Swagger", "Jira", "Scrum"]
   }
 ];
 
