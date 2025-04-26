@@ -1,12 +1,20 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Briefcase, Building, Users } from "lucide-react";
+
+interface WorkDetails {
+  title: string;
+  description: string;
+  type: "client" | "internal";
+}
 
 interface Experience {
   company: string;
   role: string;
   period: string;
-  description: string;
+  description?: string;
+  workDetails?: WorkDetails[];
   industry: string;
   technologies: string[];
 }
@@ -16,7 +24,23 @@ const experiences: Experience[] = [
     company: "Sigma Technology AB",
     role: "Full-Stack Developer/ Lead Developer/ Scrum Master",
     period: "June 2021 - Jan 2025",
-    description: "",
+    workDetails: [
+      {
+        title: "Client: Telecom Company",
+        description: "Led a team of 4 developers in developing and maintaining a cloud-based telecom platform. Implemented microservices architecture using Node.js and React, resulting in 40% improved system performance. Introduced automated testing that increased code coverage to 85%.",
+        type: "client"
+      },
+      {
+        title: "Client: Financial Services",
+        description: "Developed a real-time transaction monitoring system using React and Spring Boot. Implemented responsive dashboards and analytics features that improved transaction tracking efficiency by 60%. Led the migration from monolithic to microservices architecture.",
+        type: "client"
+      },
+      {
+        title: "Internal Projects at Sigma",
+        description: "Mentored junior developers, established coding standards, and led Scrum ceremonies. Created internal tools for project management and resource allocation. Conducted technical interviews and contributed to company-wide architecture decisions.",
+        type: "internal"
+      }
+    ],
     industry: "Consultancy, Telecom",
     technologies: ["React", "Node.js", "TypeScript", "Vanilla JS", "MongoDB", "AWS"]
   },
@@ -80,7 +104,25 @@ const ExperienceSection = () => {
                 <div className="text-sm text-muted-foreground">{exp.period}</div>
               </CardHeader>
               <CardContent className="p-6">
-                <p className="mb-4">{exp.description}</p>
+                {exp.description && <p className="mb-4">{exp.description}</p>}
+                
+                {exp.workDetails && (
+                  <div className="space-y-6 mb-6">
+                    {exp.workDetails.map((work, idx) => (
+                      <div key={idx} className="space-y-2">
+                        <div className="flex items-center gap-2 text-lg font-medium">
+                          {work.type === "client" ? 
+                            <Briefcase className="h-5 w-5" /> : 
+                            <Building className="h-5 w-5" />
+                          }
+                          {work.title}
+                        </div>
+                        <p className="text-muted-foreground pl-7">{work.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
                 <div className="flex flex-wrap gap-2 mt-4">
                   {exp.technologies.map((tech) => (
                     <Badge key={tech} variant="secondary" className="text-xs">
