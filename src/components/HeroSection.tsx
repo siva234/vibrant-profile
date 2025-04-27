@@ -3,6 +3,15 @@ import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const HeroSection = () => {
+  const scrollToExperiences = () => {
+    const experiences = document.getElementById("experience");
+    if (experiences) {
+      window.scrollTo({
+        top: experiences.offsetTop - 100,
+        behavior: "smooth",
+      });
+    }
+  };
   const scrollToProjects = () => {
     const projects = document.getElementById("projects");
     if (projects) {
@@ -20,7 +29,7 @@ const HeroSection = () => {
     >
       <div className="container mx-auto px-4">
         <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.2s' }}>
-          <p className="text-accent font-mono mb-5">Hi, this is Venkata Sai Siva Reddy Kolli</p>
+          <p className="text-accent font-mono mb-5">Hi, this is Siva Kolli</p>
         </div>
         
         <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.4s' }}>
@@ -31,13 +40,13 @@ const HeroSection = () => {
         
         <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.6s' }}>
           <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground/70 mb-6">
-            I build exceptional digital experiences
+            I build and manage exceptional digital experiences
           </h2>
         </div>
         
         <div className="animate-fade-in opacity-0 max-w-xl" style={{ animationDelay: '0.8s' }}>
           <p className="text-lg text-foreground/70 mb-8">
-            I'm a software engineer specializing in building outstanding digital experiences.
+            I'm a software engineer specializing in building and managing outstanding applications.
             Currently, I'm focused on building accessible, human-centered products.
           </p>
         </div>
@@ -46,26 +55,17 @@ const HeroSection = () => {
           <Button 
             size="lg" 
             className="bg-primary hover:bg-primary/90 text-white"
-            onClick={scrollToProjects}
+            onClick={scrollToExperiences}
           >
-            View My Work
+            My Experiences
           </Button>
-          
           <Button 
             size="lg" 
             variant="outline" 
             className="border-primary text-primary hover:bg-primary/10"
-            onClick={() => {
-              const contact = document.getElementById("contact");
-              if (contact) {
-                window.scrollTo({
-                  top: contact.offsetTop - 100,
-                  behavior: "smooth",
-                });
-              }
-            }}
+            onClick={scrollToProjects}
           >
-            Contact Me
+            View My Work
           </Button>
         </div>
       </div>

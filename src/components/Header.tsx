@@ -45,16 +45,19 @@ const Header = () => {
       }`}
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <a 
-          href="#home" 
-          className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors"
-          onClick={(e) => {
-            e.preventDefault();
-            scrollToSection("home");
-          }}
-        >
-          Portfolio
-        </a>
+        <div className="flex flex-row">
+          <img  className="w-10 flex flex-col" src="/apple-touch-icon.png"  alt="logo"/>
+          <a 
+            href="#home" 
+            className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors flex-col"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection("home");
+            }}
+          >
+            Portfolio
+          </a>
+        </div>
 
         <nav className="hidden md:flex space-x-1">
           {["Home", "About", "Skills", "Experience", "Projects", "Contact"].map((item) => {
