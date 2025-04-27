@@ -1,6 +1,6 @@
-
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ParticlesBackground from "./ParticlesBackground";
 
 const HeroSection = () => {
   const scrollToExperiences = () => {
@@ -25,9 +25,10 @@ const HeroSection = () => {
   return (
     <section
       id="home"
-      className="min-h-screen flex flex-col justify-center pt-20"
+      className="min-h-screen flex flex-col justify-center pt-20 relative overflow-hidden"
     >
-      <div className="container mx-auto px-4">
+      <ParticlesBackground />
+      <div className="container mx-auto px-4 relative">
         <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.2s' }}>
           <p className="text-accent font-mono mb-5">Hi, this is Siva Kolli</p>
         </div>
