@@ -29,23 +29,33 @@ const ParticlesBackground = () => {
       dy: number;
       size: number;
       color: string;
+      opacity: number;
     }> = [];
 
     // Create particles
     const createParticles = () => {
-      const particleCount = 50;
+      const particleCount = 75;
       const colors = theme === 'dark' 
-        ? ['rgba(139, 92, 246, 0.2)', 'rgba(139, 92, 246, 0.1)', 'rgba(255, 255, 255, 0.1)']
-        : ['rgba(51, 195, 240, 0.2)', 'rgba(211, 228, 253, 0.3)', 'rgba(139, 92, 246, 0.1)'];
+        ? [
+            'rgba(139, 92, 246, 0.4)',   // Vibrant purple
+            'rgba(255, 255, 255, 0.2)',  // Soft white
+            'rgba(30, 64, 175, 0.3)'     // Deep blue
+          ]
+        : [
+            'rgba(51, 195, 240, 0.4)',   // Sky blue
+            'rgba(59, 130, 246, 0.3)',   // Bright blue
+            'rgba(147, 51, 234, 0.2)'    // Soft purple
+          ];
 
       for (let i = 0; i < particleCount; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          dx: (Math.random() - 0.5) * 0.5,
-          dy: (Math.random() - 0.5) * 0.5,
-          size: Math.random() * 5 + 1,
-          color: colors[Math.floor(Math.random() * colors.length)]
+          dx: (Math.random() - 0.5) * 0.7,
+          dy: (Math.random() - 0.5) * 0.7,
+          size: Math.random() * 8 + 2,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          opacity: Math.random() * 0.7 + 0.3
         });
       }
     };
@@ -68,7 +78,9 @@ const ParticlesBackground = () => {
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
         ctx.fillStyle = particle.color;
+        ctx.globalAlpha = particle.opacity;
         ctx.fill();
+        ctx.globalAlpha = 1;
       });
 
       requestAnimationFrame(animate);
@@ -86,9 +98,10 @@ const ParticlesBackground = () => {
     <canvas
       ref={canvasRef}
       className="absolute inset-0 -z-10"
-      style={{ opacity: 0.7 }}
+      style={{ opacity: 0.8 }}
     />
   );
 };
 
 export default ParticlesBackground;
+
