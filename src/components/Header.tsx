@@ -11,7 +11,7 @@ const Header = () => {
     setScrolled(scrollPosition > 50);
     
     // Update active section based on scroll position
-    const sections = ["home", "about", "skills", "experience", "projects", "contact"];
+    const sections = ["home", "about", "skills", "education", "experience", "projects", "contact"];
     for (const section of sections.reverse()) {
       const element = document.getElementById(section);
       if (element && scrollPosition >= element.offsetTop - 200) {
