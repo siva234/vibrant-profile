@@ -17,31 +17,33 @@ interface Education {
 
 const educations: Education[] = [
   {
-    degree: "Master of Science in Engineering",
-    institution: "KTH Royal Institute of Technology",
+    degree: "Masters in Computer Science",
+    institution: "Blekinge Institute of Technology",
     period: "2015 - 2017",
-    location: "Stockholm, Sweden",
-    description: "Specialized in Computer Science with focus on Software Engineering and Distributed Systems.",
+    location: "Karlskrona, Sweden",
+    description: "Specialized in Computer Science with topics like AI, Machine Learning and Software Security.",
     achievements: [
-      "Graduate thesis on cloud-based microservices architecture",
-      "Participated in university hackathons",
-      "Student representative for the department council"
+      "Industrial thesis with Ericsson on Backward Compatibility check tools Analysis",
+      "Participated in Events like India Day conducted in BTH",
+      "Part of hockey team in KIDS club and played in tournaments",
+      "Got selected by Bth based on credits to take part in Industrial training from Softhouse AB"
     ],
     icon: "university",
-    watermarkImage: "https://images.unsplash.com/photo-1524230572899-a752b3835840?auto=format&fit=crop&q=80"
+    watermarkImage: "https://www.bth.se/wp-content/uploads/2023/03/0C8A7887_spotbild-475x310.jpg"
   },
   {
-    degree: "Bachelor of Engineering",
-    institution: "Uppsala University",
-    period: "2012 - 2015",
-    location: "Uppsala, Sweden",
-    description: "Computer Science and Engineering with minor in Mathematics.",
+    degree: "Bachelors in Computer Science",
+    institution: "Jawaharlal Nehuru Technological University Kakinada",
+    period: "2011 - 2014",
+    location: "Kakinada, India",
+    description: "Computer Science and Engineering from india with topics like C, Java, Web Technologies, Cyber Security and Computer architecture.",
     achievements: [
-      "Undergraduate thesis on backend development and API design",
-      "Student mentor for first-year students"
+      "Undergraduate thesis on Secured Login System using Visual Cryptography",
+      "Active member of Voluntary clubs like Rotaract and Carbon Credit Club",
+      "Student leader for Gaming section in College Tech fests for 2 years"
     ],
     icon: "graduation",
-    watermarkImage: "https://images.unsplash.com/photo-1492321936769-b49830bc1d1e?auto=format&fit=crop&q=80"
+    watermarkImage: "https://media.licdn.com/dms/image/v2/C5622AQHMjwOOZbehDQ/feedshare-shrink_800/feedshare-shrink_800/0/1679032857623?e=2147483647&v=beta&t=oi367-MPrMKjNF0bOMOkwo_jUTXhngVpvEW3Ug_DvPw&auto=format&fit=crop&q=80"
   }
 ];
 
@@ -52,7 +54,7 @@ const EducationSection = () => {
       <div 
         className="absolute inset-0 opacity-5 pointer-events-none z-0"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&q=80')",
+          backgroundImage: "url('https://us.almawq3.com/wp-content/uploads/2024/10/Pros-and-Cons-of-Using-Education-Technology.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           filter: "grayscale(60%)"

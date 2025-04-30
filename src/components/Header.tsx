@@ -60,7 +60,7 @@ const Header = () => {
         </div>
 
         <nav className="hidden md:flex space-x-1">
-          {["Home", "About", "Skills", "Experience", "Projects", "Contact"].map((item) => {
+          {["Home", "About", "Skills", "Education", "Experience", "Projects", "Contact"].map((item) => {
             const sectionId = item.toLowerCase();
             return (
               <a
