@@ -4,8 +4,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Github, Linkedin, Mail, Phone } from "lucide-react";
+import { Github, Linkedin, Mail, Phone, SendIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import emailjs from '@emailjs/browser';
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -22,26 +23,50 @@ const ContactSection = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      // Prepare template parameters for EmailJS
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        subject: `Portfolio: ${formData.subject}`,
+        message: formData.message,
+        to_email: 'siva.kolli1993@gmail.com',
+      };
+      
+      // Send email using EmailJS
+      await emailjs.send(
+        'service_portfolio', // You'll need to replace this with your service ID
+        'template_portfolio', // You'll need to replace this with your template ID
+        templateParams,
+        'your_public_key' // You'll need to replace this with your public key
+      );
+      
       toast({
         title: "Message sent!",
         description: "Thank you for reaching out. I'll get back to you soon.",
       });
       
+      // Clear form after successful submission
       setFormData({
         name: "",
         email: "",
         subject: "",
         message: "",
       });
-      
+    } catch (error) {
+      console.error("Error sending email:", error);
+      toast({
+        title: "Error sending message",
+        description: "There was a problem sending your message. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -159,7 +184,12 @@ const ContactSection = () => {
                   className="w-full"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Sending..." : "Send Message"}
+                  {isSubmitting ? "Sending..." : (
+                    <>
+                      Send Message
+                      <SendIcon className="ml-2 h-4 w-4" />
+                    </>
+                  )}
                 </Button>
               </form>
             </CardContent>
@@ -171,3 +201,4 @@ const ContactSection = () => {
 };
 
 export default ContactSection;
+
