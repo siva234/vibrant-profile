@@ -57,7 +57,7 @@ const fallbackProjects = [
 
 // Function to fetch GitHub repos
 const fetchGitHubRepos = async (): Promise<GitHubRepo[]> => {
-  const response = await fetch("https://api.github.com/users/siva234/repos?sort=updated&direction=desc&per_page=4");
+  const response = await fetch("https://api.github.com/users/siva234/repos?sort=updated&direction=desc&per_page=6");
   
   if (!response.ok) {
     throw new Error("Failed to fetch GitHub repos");
@@ -122,7 +122,7 @@ const ProjectsSection = () => {
             <span className="ml-2">Loading projects from GitHub...</span>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 lg:grid-cols-3 gap-6">
             {projects.map((project, index) => (
               <Card 
                 key={project.title + index}
