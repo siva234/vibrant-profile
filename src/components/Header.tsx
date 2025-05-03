@@ -11,7 +11,7 @@ const Header = () => {
     setScrolled(scrollPosition > 50);
     
     // Update active section based on scroll position
-    const sections = ["home", "about", "skills", "education", "experience", "projects", "contact"];
+    const sections = ["home", "about", "skills", "experience", "education", "projects", "contact"];
     for (const section of sections.reverse()) {
       const element = document.getElementById(section);
       if (element && scrollPosition >= element.offsetTop - 200) {
@@ -60,7 +60,7 @@ const Header = () => {
         </div>
 
         <nav className="hidden md:flex space-x-1">
-          {["Home", "About", "Skills", "Education", "Experience", "Projects", "Contact"].map((item) => {
+          {["Home", "About", "Skills", "Experience", "Education", "Projects", "Contact"].map((item) => {
             const sectionId = item.toLowerCase();
             return (
               <a
