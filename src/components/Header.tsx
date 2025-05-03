@@ -46,7 +46,7 @@ const Header = () => {
     >
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex flex-row">
-          <img  className="w-10 flex flex-col" src="/apple-touch-icon.png"  alt="logo"/>
+          <img className="w-10 flex flex-col" src="/apple-touch-icon.png" alt="logo"/>
           <a 
             href="#home" 
             className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors flex-col"
