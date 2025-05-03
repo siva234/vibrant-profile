@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Github, ExternalLink, Code, Loader2 } from "lucide-react";
+import { Github, ExternalLink, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 // Types for GitHub API response
