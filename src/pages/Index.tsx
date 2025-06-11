@@ -8,6 +8,7 @@ import ExperienceSection from "@/components/ExperienceSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
+import PortfolioChatbot from "@/components/PortfolioChatbot";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 const Index = () => {
@@ -25,6 +26,7 @@ const Index = () => {
           <ContactSection />
         </main>
         <Footer />
+        <PortfolioChatbot />
       </div>
     </ThemeProvider>
   );
