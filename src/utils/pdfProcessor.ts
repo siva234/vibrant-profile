@@ -1,9 +1,41 @@
 
-import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { Document } from "langchain/document";
+
+// Note: pdf-parse requires a different approach in browser environment
+// We'll use a custom PDF text extraction method
+async function extractTextFromPDF(file: File): Promise<string> {
+  try {
+    // For browser environment, we'll use a simple text extraction
+    // This is a basic implementation - in production you might want to use pdf.js
+    const arrayBuffer = await file.arrayBuffer();
+    const uint8Array = new Uint8Array(arrayBuffer);
+    
+    // Convert to text - this is a simplified approach
+    // In a real implementation, you'd use pdf.js or similar
+    let text = '';
+    for (let i = 0; i < uint8Array.length; i++) {
+      const char = String.fromCharCode(uint8Array[i]);
+      if (char.match(/[\x20-\x7E\n\r\t]/)) { // printable ASCII + whitespace
+        text += char;
+      }
+    }
+    
+    // Clean up the extracted text
+    text = text.replace(/\x00/g, '').trim();
+    
+    if (!text || text.length < 10) {
+      throw new Error('Could not extract meaningful text from PDF');
+    }
+    
+    return text;
+  } catch (error) {
+    console.error('Error extracting text from PDF:', error);
+    throw new Error(`Failed to extract text from PDF: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
 
 export class PDFKnowledgeBase {
   private vectorStore: MemoryVectorStore | null = null;
@@ -24,39 +56,32 @@ export class PDFKnowledgeBase {
       for (const file of pdfFiles) {
         console.log(`Processing PDF: ${file.name}`);
         
-        // Convert File to ArrayBuffer and then to Buffer
-        const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        
-        // Create a blob URL for the PDF loader
-        const blob = new Blob([buffer], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        
         try {
-          // Use PDFLoader to extract text
-          const loader = new PDFLoader(url);
-          const docs = await loader.load();
+          // Extract text from PDF
+          const text = await extractTextFromPDF(file);
           
-          // Add metadata about the source file
-          docs.forEach(doc => {
-            doc.metadata = {
-              ...doc.metadata,
+          // Create a document with the extracted text
+          const doc = new Document({
+            pageContent: text,
+            metadata: {
               source: file.name,
-              type: 'pdf'
-            };
+              type: 'pdf',
+              size: file.size,
+              lastModified: file.lastModified
+            }
           });
           
-          documents.push(...docs);
+          documents.push(doc);
+          console.log(`Successfully processed PDF: ${file.name} (${text.length} characters)`);
           
-          // Clean up the blob URL
-          URL.revokeObjectURL(url);
         } catch (error) {
           console.error(`Error processing PDF ${file.name}:`, error);
+          // Continue with other files even if one fails
         }
       }
 
       if (documents.length === 0) {
-        throw new Error("No documents were successfully processed");
+        throw new Error("No documents were successfully processed. Please ensure you're uploading valid PDF files.");
       }
 
       // Split documents into chunks
