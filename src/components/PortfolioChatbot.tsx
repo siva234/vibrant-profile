@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,6 +25,7 @@ const PortfolioChatbot = () => {
   const [knowledgeBase, setKnowledgeBase] = useState<PDFKnowledgeBase | null>(null);
   const [isKnowledgeReady, setIsKnowledgeReady] = useState(false);
   const [isProcessingPDFs, setIsProcessingPDFs] = useState(false);
+  const [useDataFolder, setUseDataFolder] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -37,7 +37,7 @@ const PortfolioChatbot = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleApiKeySubmit = () => {
+  const handleApiKeySubmit = async () => {
     if (!apiKey.trim()) {
       toast({
         title: "API Key Required",
@@ -51,10 +51,37 @@ const PortfolioChatbot = () => {
     setKnowledgeBase(kb);
     setIsApiKeySet(true);
     
-    toast({
-      title: "API Key Set",
-      description: "Now please upload your PDF documents to create the knowledge base.",
-    });
+    // Automatically try to load PDFs from data folder
+    setIsProcessingPDFs(true);
+    try {
+      await kb.initializeFromDataFolder();
+      setIsKnowledgeReady(true);
+      
+      toast({
+        title: "Knowledge Base Ready",
+        description: "Successfully loaded PDFs from the data folder. You can now start chatting!",
+      });
+
+      // Add welcome message
+      const welcomeMessage: Message = {
+        id: Date.now().toString(),
+        content: "Hello! I'm your AI portfolio assistant. I've learned about you from the PDF documents in your data folder. Feel free to ask me anything about your background, experience, skills, or projects!",
+        role: 'assistant',
+        timestamp: new Date()
+      };
+      setMessages([welcomeMessage]);
+      
+    } catch (error) {
+      console.error("Error loading PDFs from data folder:", error);
+      setUseDataFolder(false);
+      toast({
+        title: "Data Folder Not Available",
+        description: "Could not load PDFs from data folder. Please upload your PDF documents manually.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsProcessingPDFs(false);
+    }
   };
 
   const handlePDFsUploaded = async (files: File[]) => {
@@ -225,14 +252,23 @@ If the question cannot be answered from the provided context, politely mention t
                 onKeyPress={(e) => e.key === 'Enter' && handleApiKeySubmit()}
               />
               <Button onClick={handleApiKeySubmit} className="w-full">
-                Set API Key
+                Initialize AI Assistant
               </Button>
             </div>
-          ) : !isKnowledgeReady ? (
+          ) : !isKnowledgeReady && !useDataFolder ? (
             <PDFUploader 
               onPDFsUploaded={handlePDFsUploaded}
               isProcessing={isProcessingPDFs}
             />
+          ) : !isKnowledgeReady && useDataFolder ? (
+            <div className="flex items-center justify-center p-8">
+              <div className="text-center">
+                <Bot className="h-12 w-12 mx-auto mb-4 text-muted-foreground animate-pulse" />
+                <p className="text-sm text-muted-foreground">
+                  Loading knowledge base from data folder...
+                </p>
+              </div>
+            </div>
           ) : (
             <>
               <div className="flex-1 overflow-y-auto space-y-4 mb-4">
