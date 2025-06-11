@@ -82,12 +82,7 @@ export class PDFKnowledgeBase {
     try {
       // Common PDF filenames to try (you can extend this list)
       const commonPDFNames = [
-        'Venkata_Sai_Siva_Reddy.pdf',
-        'resume.pdf',
-        'cv.pdf',
-        'portfolio.pdf',
-        'document.pdf',
-        'profile.pdf'
+        'Venkata_Sai_Siva_Reddy.pdf'
       ];
       
       // Try to fetch each potential PDF file
@@ -102,21 +97,6 @@ export class PDFKnowledgeBase {
         } catch (error) {
           // Silently ignore 404s and other fetch errors for discovery
           console.log(`File ${fileName} not found, skipping...`);
-        }
-      }
-
-      // Also try some numbered variations
-      for (let i = 1; i <= 10; i++) {
-        const fileName = `document${i}.pdf`;
-        try {
-          const response = await fetch(`/data/${fileName}`);
-          if (response.ok) {
-            const arrayBuffer = await response.arrayBuffer();
-            pdfFiles.push({ fileName, arrayBuffer });
-            console.log(`Successfully fetched ${fileName}`);
-          }
-        } catch (error) {
-          // Silently ignore
         }
       }
     } catch (error) {
