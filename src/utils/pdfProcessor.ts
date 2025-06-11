@@ -1,5 +1,4 @@
 
-import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
@@ -20,8 +19,8 @@ export class PDFKnowledgeBase {
     try {
       console.log("Loading PDFs from /data/ folder...");
       
-      // Fetch PDFs from the data folder
-      const pdfFiles = await this.fetchPDFsFromDataFolder();
+      // Discover and fetch all PDFs from the data folder
+      const pdfFiles = await this.discoverAndFetchPDFs();
       
       if (pdfFiles.length === 0) {
         throw new Error("No PDF files found in the /data/ folder");
@@ -34,27 +33,18 @@ export class PDFKnowledgeBase {
         console.log(`Processing PDF: ${fileName}`);
         
         try {
-          // Create blob directly from ArrayBuffer (no Buffer needed in browser)
-          const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
-          const url = URL.createObjectURL(blob);
+          const textContent = await this.extractTextFromPDF(arrayBuffer);
           
-          // Use PDFLoader to extract text
-          const loader = new PDFLoader(url);
-          const docs = await loader.load();
-          
-          // Add metadata about the source file
-          docs.forEach(doc => {
-            doc.metadata = {
-              ...doc.metadata,
-              source: fileName,
-              type: 'pdf'
-            };
-          });
-          
-          documents.push(...docs);
-          
-          // Clean up the blob URL
-          URL.revokeObjectURL(url);
+          if (textContent.trim()) {
+            const doc = new Document({
+              pageContent: textContent,
+              metadata: {
+                source: fileName,
+                type: 'pdf'
+              }
+            });
+            documents.push(doc);
+          }
         } catch (error) {
           console.error(`Error processing PDF ${fileName}:`, error);
         }
@@ -86,32 +76,66 @@ export class PDFKnowledgeBase {
     }
   }
 
-  private async fetchPDFsFromDataFolder(): Promise<Array<{ fileName: string; arrayBuffer: ArrayBuffer }>> {
+  private async discoverAndFetchPDFs(): Promise<Array<{ fileName: string; arrayBuffer: ArrayBuffer }>> {
     const pdfFiles: Array<{ fileName: string; arrayBuffer: ArrayBuffer }> = [];
     
     try {
-      // List of known PDF files in the data folder
-      const knownPDFs = ['Venkata_Sai_Siva_Reddy.pdf']; // Add more PDF filenames as needed
+      // Common PDF filenames to try (you can extend this list)
+      const commonPDFNames = [
+        'Venkata_Sai_Siva_Reddy.pdf',
+        'resume.pdf',
+        'cv.pdf',
+        'portfolio.pdf',
+        'document.pdf',
+        'profile.pdf'
+      ];
       
-      for (const fileName of knownPDFs) {
+      // Try to fetch each potential PDF file
+      for (const fileName of commonPDFNames) {
         try {
           const response = await fetch(`/data/${fileName}`);
           if (response.ok) {
             const arrayBuffer = await response.arrayBuffer();
             pdfFiles.push({ fileName, arrayBuffer });
             console.log(`Successfully fetched ${fileName}`);
-          } else {
-            console.warn(`Failed to fetch ${fileName}: ${response.status}`);
           }
         } catch (error) {
-          console.error(`Error fetching ${fileName}:`, error);
+          // Silently ignore 404s and other fetch errors for discovery
+          console.log(`File ${fileName} not found, skipping...`);
+        }
+      }
+
+      // Also try some numbered variations
+      for (let i = 1; i <= 10; i++) {
+        const fileName = `document${i}.pdf`;
+        try {
+          const response = await fetch(`/data/${fileName}`);
+          if (response.ok) {
+            const arrayBuffer = await response.arrayBuffer();
+            pdfFiles.push({ fileName, arrayBuffer });
+            console.log(`Successfully fetched ${fileName}`);
+          }
+        } catch (error) {
+          // Silently ignore
         }
       }
     } catch (error) {
-      console.error("Error fetching PDFs from data folder:", error);
+      console.error("Error discovering PDFs:", error);
     }
     
     return pdfFiles;
+  }
+
+  private async extractTextFromPDF(arrayBuffer: ArrayBuffer): Promise<string> {
+    try {
+      // Use pdf-parse for text extraction
+      const pdfParse = await import('pdf-parse');
+      const pdf = await pdfParse.default(arrayBuffer);
+      return pdf.text;
+    } catch (error) {
+      console.error("Error extracting text from PDF:", error);
+      throw new Error("Failed to extract text from PDF");
+    }
   }
 
   async searchRelevantContent(query: string, k: number = 3): Promise<Document[]> {

@@ -24,7 +24,6 @@ const PortfolioChatbot = () => {
   const [isApiKeySet, setIsApiKeySet] = useState(false);
   const [knowledgeBase, setKnowledgeBase] = useState<PDFKnowledgeBase | null>(null);
   const [isKnowledgeReady, setIsKnowledgeReady] = useState(false);
-  const [isProcessingPDFs, setIsProcessingPDFs] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -50,8 +49,6 @@ const PortfolioChatbot = () => {
     setKnowledgeBase(kb);
     setIsApiKeySet(true);
     
-    // Automatically try to load PDFs from data folder
-    setIsProcessingPDFs(true);
     try {
       await kb.initializeFromDataFolder();
       setIsKnowledgeReady(true);
@@ -61,7 +58,6 @@ const PortfolioChatbot = () => {
         description: "Successfully loaded PDFs from the data folder. You can now start chatting!",
       });
 
-      // Add welcome message
       const welcomeMessage: Message = {
         id: Date.now().toString(),
         content: "Hello! I'm your AI portfolio assistant. I've learned about you from the PDF documents in your data folder. Feel free to ask me anything about your background, experience, skills, or projects!",
@@ -77,8 +73,6 @@ const PortfolioChatbot = () => {
         description: "Could not load PDFs from data folder. Please check that your PDF files are in the /data/ folder and try again.",
         variant: "destructive"
       });
-    } finally {
-      setIsProcessingPDFs(false);
     }
   };
 
@@ -97,11 +91,9 @@ const PortfolioChatbot = () => {
     setIsLoading(true);
 
     try {
-      // Search for relevant content in the knowledge base
       const relevantDocs = await knowledgeBase.searchRelevantContent(inputValue);
       const context = relevantDocs.map(doc => doc.pageContent).join('\n\n');
 
-      // Create a prompt with context
       const systemPrompt = `You are a helpful AI assistant representing the person described in the following documents. Use the context provided to answer questions about their background, experience, skills, and projects. Be conversational and helpful.
 
 Context from documents:
@@ -109,7 +101,6 @@ ${context}
 
 If the question cannot be answered from the provided context, politely mention that you don't have that specific information in the uploaded documents.`;
 
-      // Make API call to OpenAI
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
