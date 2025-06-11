@@ -34,9 +34,8 @@ export class PDFKnowledgeBase {
         console.log(`Processing PDF: ${fileName}`);
         
         try {
-          // Convert ArrayBuffer to Buffer and create blob
-          const buffer = Buffer.from(arrayBuffer);
-          const blob = new Blob([buffer], { type: 'application/pdf' });
+          // Create blob directly from ArrayBuffer (no Buffer needed in browser)
+          const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
           const url = URL.createObjectURL(blob);
           
           // Use PDFLoader to extract text
@@ -92,7 +91,6 @@ export class PDFKnowledgeBase {
     
     try {
       // List of known PDF files in the data folder
-      // In a real application, you might want to dynamically discover these
       const knownPDFs = ['Venkata_Sai_Siva_Reddy.pdf']; // Add more PDF filenames as needed
       
       for (const fileName of knownPDFs) {
@@ -116,74 +114,9 @@ export class PDFKnowledgeBase {
     return pdfFiles;
   }
 
-  async initializeFromPDFs(pdfFiles: File[]): Promise<void> {
-    try {
-      const documents: Document[] = [];
-      
-      // Process each PDF file
-      for (const file of pdfFiles) {
-        console.log(`Processing PDF: ${file.name}`);
-        
-        // Convert File to ArrayBuffer and then to Buffer
-        const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        
-        // Create a blob URL for the PDF loader
-        const blob = new Blob([buffer], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        
-        try {
-          // Use PDFLoader to extract text
-          const loader = new PDFLoader(url);
-          const docs = await loader.load();
-          
-          // Add metadata about the source file
-          docs.forEach(doc => {
-            doc.metadata = {
-              ...doc.metadata,
-              source: file.name,
-              type: 'pdf'
-            };
-          });
-          
-          documents.push(...docs);
-          
-          // Clean up the blob URL
-          URL.revokeObjectURL(url);
-        } catch (error) {
-          console.error(`Error processing PDF ${file.name}:`, error);
-        }
-      }
-
-      if (documents.length === 0) {
-        throw new Error("No documents were successfully processed");
-      }
-
-      // Split documents into chunks
-      const textSplitter = new RecursiveCharacterTextSplitter({
-        chunkSize: 1000,
-        chunkOverlap: 200,
-      });
-
-      const splitDocs = await textSplitter.splitDocuments(documents);
-      console.log(`Created ${splitDocs.length} document chunks from ${pdfFiles.length} PDFs`);
-
-      // Create vector store
-      this.vectorStore = await MemoryVectorStore.fromDocuments(
-        splitDocs,
-        this.embeddings
-      );
-
-      console.log("Knowledge base initialized successfully");
-    } catch (error) {
-      console.error("Error initializing knowledge base:", error);
-      throw error;
-    }
-  }
-
   async searchRelevantContent(query: string, k: number = 3): Promise<Document[]> {
     if (!this.vectorStore) {
-      throw new Error("Knowledge base not initialized. Please upload PDFs first.");
+      throw new Error("Knowledge base not initialized. Please try again.");
     }
 
     try {

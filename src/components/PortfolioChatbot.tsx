@@ -1,10 +1,10 @@
+
 import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, Send, Bot, User, X, Minimize2, Maximize2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import PDFUploader from "./PDFUploader";
 import { PDFKnowledgeBase } from "@/utils/pdfProcessor";
 
 interface Message {
@@ -25,7 +25,6 @@ const PortfolioChatbot = () => {
   const [knowledgeBase, setKnowledgeBase] = useState<PDFKnowledgeBase | null>(null);
   const [isKnowledgeReady, setIsKnowledgeReady] = useState(false);
   const [isProcessingPDFs, setIsProcessingPDFs] = useState(false);
-  const [useDataFolder, setUseDataFolder] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -73,44 +72,9 @@ const PortfolioChatbot = () => {
       
     } catch (error) {
       console.error("Error loading PDFs from data folder:", error);
-      setUseDataFolder(false);
       toast({
-        title: "Data Folder Not Available",
-        description: "Could not load PDFs from data folder. Please upload your PDF documents manually.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsProcessingPDFs(false);
-    }
-  };
-
-  const handlePDFsUploaded = async (files: File[]) => {
-    if (!knowledgeBase) return;
-    
-    setIsProcessingPDFs(true);
-    try {
-      await knowledgeBase.initializeFromPDFs(files);
-      setIsKnowledgeReady(true);
-      
-      toast({
-        title: "Knowledge Base Ready",
-        description: `Successfully processed ${files.length} PDF files. You can now start chatting!`,
-      });
-
-      // Add welcome message
-      const welcomeMessage: Message = {
-        id: Date.now().toString(),
-        content: "Hello! I'm your AI portfolio assistant. I've learned about you from your uploaded documents. Feel free to ask me anything about your background, experience, skills, or projects!",
-        role: 'assistant',
-        timestamp: new Date()
-      };
-      setMessages([welcomeMessage]);
-      
-    } catch (error) {
-      console.error("Error processing PDFs:", error);
-      toast({
-        title: "Error Processing PDFs",
-        description: "There was an error processing your PDF files. Please try again.",
+        title: "Error Loading PDFs",
+        description: "Could not load PDFs from data folder. Please check that your PDF files are in the /data/ folder and try again.",
         variant: "destructive"
       });
     } finally {
@@ -255,12 +219,7 @@ If the question cannot be answered from the provided context, politely mention t
                 Initialize AI Assistant
               </Button>
             </div>
-          ) : !isKnowledgeReady && !useDataFolder ? (
-            <PDFUploader 
-              onPDFsUploaded={handlePDFsUploaded}
-              isProcessing={isProcessingPDFs}
-            />
-          ) : !isKnowledgeReady && useDataFolder ? (
+          ) : !isKnowledgeReady ? (
             <div className="flex items-center justify-center p-8">
               <div className="text-center">
                 <Bot className="h-12 w-12 mx-auto mb-4 text-muted-foreground animate-pulse" />
