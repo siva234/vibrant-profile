@@ -3,8 +3,9 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { Document } from "langchain/document";
+import mammoth from "mammoth";
 
-export class PDFKnowledgeBase {
+export class DocKnowledgeBase {
   private vectorStore: MemoryVectorStore | null = null;
   private embeddings: OpenAIEmbeddings;
 
@@ -17,36 +18,36 @@ export class PDFKnowledgeBase {
 
   async initializeFromDataFolder(): Promise<void> {
     try {
-      console.log("Loading PDFs from /data/ folder...");
+      console.log("Loading Word documents from /data/ folder...");
       
-      // Discover and fetch all PDFs from the data folder
-      const pdfFiles = await this.discoverAndFetchPDFs();
+      // Discover and fetch all Word documents from the data folder
+      const docFiles = await this.discoverAndFetchDocs();
       
-      if (pdfFiles.length === 0) {
-        throw new Error("No PDF files found in the /data/ folder");
+      if (docFiles.length === 0) {
+        throw new Error("No Word document files found in the /data/ folder");
       }
 
       const documents: Document[] = [];
       
-      // Process each PDF file
-      for (const { fileName, arrayBuffer } of pdfFiles) {
-        console.log(`Processing PDF: ${fileName}`);
+      // Process each Word document file
+      for (const { fileName, arrayBuffer } of docFiles) {
+        console.log(`Processing Word document: ${fileName}`);
         
         try {
-          const textContent = await this.extractTextFromPDF(arrayBuffer);
+          const textContent = await this.extractTextFromDoc(arrayBuffer, fileName);
           
           if (textContent.trim()) {
             const doc = new Document({
               pageContent: textContent,
               metadata: {
                 source: fileName,
-                type: 'pdf'
+                type: fileName.endsWith('.docx') ? 'docx' : 'doc'
               }
             });
             documents.push(doc);
           }
         } catch (error) {
-          console.error(`Error processing PDF ${fileName}:`, error);
+          console.error(`Error processing Word document ${fileName}:`, error);
         }
       }
 
@@ -61,7 +62,7 @@ export class PDFKnowledgeBase {
       });
 
       const splitDocs = await textSplitter.splitDocuments(documents);
-      console.log(`Created ${splitDocs.length} document chunks from ${pdfFiles.length} PDFs`);
+      console.log(`Created ${splitDocs.length} document chunks from ${docFiles.length} Word documents`);
 
       // Create vector store
       this.vectorStore = await MemoryVectorStore.fromDocuments(
@@ -76,22 +77,29 @@ export class PDFKnowledgeBase {
     }
   }
 
-  private async discoverAndFetchPDFs(): Promise<Array<{ fileName: string; arrayBuffer: ArrayBuffer }>> {
-    const pdfFiles: Array<{ fileName: string; arrayBuffer: ArrayBuffer }> = [];
+  private async discoverAndFetchDocs(): Promise<Array<{ fileName: string; arrayBuffer: ArrayBuffer }>> {
+    const docFiles: Array<{ fileName: string; arrayBuffer: ArrayBuffer }> = [];
     
     try {
-      // Common PDF filenames to try (you can extend this list)
-      const commonPDFNames = [
-        'Venkata_Sai_Siva_Reddy.pdf'
+      // Common Word document filenames to try (you can extend this list)
+      const commonDocNames = [
+        'Venkata_Sai_Siva_Reddy.docx',
+        'Venkata_Sai_Siva_Reddy.doc',
+        'resume.docx',
+        'resume.doc',
+        'cv.docx',
+        'cv.doc',
+        'portfolio.docx',
+        'portfolio.doc'
       ];
       
-      // Try to fetch each potential PDF file
-      for (const fileName of commonPDFNames) {
+      // Try to fetch each potential Word document file
+      for (const fileName of commonDocNames) {
         try {
           const response = await fetch(`/data/${fileName}`);
           if (response.ok) {
             const arrayBuffer = await response.arrayBuffer();
-            pdfFiles.push({ fileName, arrayBuffer });
+            docFiles.push({ fileName, arrayBuffer });
             console.log(`Successfully fetched ${fileName}`);
           }
         } catch (error) {
@@ -100,21 +108,28 @@ export class PDFKnowledgeBase {
         }
       }
     } catch (error) {
-      console.error("Error discovering PDFs:", error);
+      console.error("Error discovering Word documents:", error);
     }
     
-    return pdfFiles;
+    return docFiles;
   }
 
-  private async extractTextFromPDF(arrayBuffer: ArrayBuffer): Promise<string> {
+  private async extractTextFromDoc(arrayBuffer: ArrayBuffer, fileName: string): Promise<string> {
     try {
-      // Use pdf-parse for text extraction
-      const pdfParse = await import('pdf-parse');
-      const pdf = await pdfParse.default(arrayBuffer);
-      return pdf.text;
+      if (fileName.endsWith('.docx')) {
+        // Use mammoth for .docx files
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        return result.value;
+      } else if (fileName.endsWith('.doc')) {
+        // For .doc files, we'll need to handle them differently
+        // Since .doc files are more complex binary format, we'll throw an error for now
+        throw new Error(".doc files are not supported yet. Please convert to .docx format.");
+      } else {
+        throw new Error("Unsupported file format. Only .docx files are supported.");
+      }
     } catch (error) {
-      console.error("Error extracting text from PDF:", error);
-      throw new Error("Failed to extract text from PDF");
+      console.error("Error extracting text from Word document:", error);
+      throw new Error("Failed to extract text from Word document");
     }
   }
 

@@ -1,11 +1,10 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, Send, Bot, User, X, Minimize2, Maximize2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { PDFKnowledgeBase } from "@/utils/pdfProcessor";
+import { DocKnowledgeBase } from "@/utils/docProcessor";
 
 interface Message {
   id: string;
@@ -22,7 +21,7 @@ const PortfolioChatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [apiKey, setApiKey] = useState("");
   const [isApiKeySet, setIsApiKeySet] = useState(false);
-  const [knowledgeBase, setKnowledgeBase] = useState<PDFKnowledgeBase | null>(null);
+  const [knowledgeBase, setKnowledgeBase] = useState<DocKnowledgeBase | null>(null);
   const [isKnowledgeReady, setIsKnowledgeReady] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -45,7 +44,7 @@ const PortfolioChatbot = () => {
       return;
     }
     
-    const kb = new PDFKnowledgeBase(apiKey);
+    const kb = new DocKnowledgeBase(apiKey);
     setKnowledgeBase(kb);
     setIsApiKeySet(true);
     
@@ -55,22 +54,22 @@ const PortfolioChatbot = () => {
       
       toast({
         title: "Knowledge Base Ready",
-        description: "Successfully loaded PDFs from the data folder. You can now start chatting!",
+        description: "Successfully loaded Word documents from the data folder. You can now start chatting!",
       });
 
       const welcomeMessage: Message = {
         id: Date.now().toString(),
-        content: "Hello! I'm your AI portfolio assistant. I've learned about you from the PDF documents in your data folder. Feel free to ask me anything about your background, experience, skills, or projects!",
+        content: "Hello! I'm your AI portfolio assistant. I've learned about you from the Word documents in your data folder. Feel free to ask me anything about your background, experience, skills, or projects!",
         role: 'assistant',
         timestamp: new Date()
       };
       setMessages([welcomeMessage]);
       
     } catch (error) {
-      console.error("Error loading PDFs from data folder:", error);
+      console.error("Error loading Word documents from data folder:", error);
       toast({
-        title: "Error Loading PDFs",
-        description: "Could not load PDFs from data folder. Please check that your PDF files are in the /data/ folder and try again.",
+        title: "Error Loading Documents",
+        description: "Could not load Word documents from data folder. Please check that your .docx files are in the /data/ folder and try again.",
         variant: "destructive"
       });
     }
