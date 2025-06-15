@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ const PortfolioChatbot = () => {
   const [isApiKeySet, setIsApiKeySet] = useState(false);
   const [knowledgeBase, setKnowledgeBase] = useState<DocKnowledgeBase | null>(null);
   const [isKnowledgeReady, setIsKnowledgeReady] = useState(false);
+  const [useSimpleMode, setUseSimpleMode] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -35,16 +37,16 @@ const PortfolioChatbot = () => {
   }, [messages]);
 
   const handleApiKeySubmit = async () => {
-    if (!apiKey.trim()) {
+    if (!apiKey.trim() && !useSimpleMode) {
       toast({
         title: "API Key Required",
-        description: "Please enter your OpenAI API key to continue.",
+        description: "Please enter your OpenAI API key or use Simple Mode.",
         variant: "destructive"
       });
       return;
     }
     
-    const kb = new DocKnowledgeBase(apiKey);
+    const kb = new DocKnowledgeBase();
     setKnowledgeBase(kb);
     setIsApiKeySet(true);
     
@@ -59,7 +61,9 @@ const PortfolioChatbot = () => {
 
       const welcomeMessage: Message = {
         id: Date.now().toString(),
-        content: "Hello! I'm your AI portfolio assistant. I've learned about you from the Word documents in your data folder. Feel free to ask me anything about your background, experience, skills, or projects!",
+        content: useSimpleMode 
+          ? "Hello! I'm your portfolio assistant running in Simple Mode. I can answer questions based on the documents I've loaded, but responses will be based on keyword matching rather than AI generation. What would you like to know?"
+          : "Hello! I'm your AI portfolio assistant. I've learned about you from the Word documents in your data folder. Feel free to ask me anything about your background, experience, skills, or projects!",
         role: 'assistant',
         timestamp: new Date()
       };
@@ -90,54 +94,90 @@ const PortfolioChatbot = () => {
     setIsLoading(true);
 
     try {
-      const relevantDocs = await knowledgeBase.searchRelevantContent(inputValue);
-      const context = relevantDocs.map(doc => doc.pageContent).join('\n\n');
+      if (useSimpleMode || !apiKey.trim()) {
+        // Simple mode - just return relevant document chunks
+        const relevantChunks = knowledgeBase.searchRelevantContent(inputValue, 3);
+        
+        let response = "";
+        if (relevantChunks.length > 0) {
+          response = "Based on the documents, here's what I found:\n\n";
+          relevantChunks.forEach((chunk, index) => {
+            response += `**From ${chunk.source}:**\n${chunk.content}\n\n`;
+          });
+        } else {
+          response = "I couldn't find specific information about that in the loaded documents. You might want to try different keywords or ask about topics like experience, skills, education, or projects.";
+        }
 
-      const systemPrompt = `You are a helpful AI assistant representing the person described in the following documents. Use the context provided to answer questions about their background, experience, skills, and projects. Be conversational and helpful.
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          content: response,
+          role: 'assistant',
+          timestamp: new Date()
+        };
+
+        setMessages(prev => [...prev, assistantMessage]);
+      } else {
+        // AI mode with OpenAI API
+        const relevantChunks = knowledgeBase.searchRelevantContent(inputValue);
+        const context = relevantChunks.map(chunk => chunk.content).join('\n\n');
+
+        const systemPrompt = `You are a helpful AI assistant representing the person described in the following documents. Use the context provided to answer questions about their background, experience, skills, and projects. Be conversational and helpful.
 
 Context from documents:
 ${context}
 
 If the question cannot be answered from the provided context, politely mention that you don't have that specific information in the uploaded documents.`;
 
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: inputValue }
-          ],
-          max_tokens: 500,
-          temperature: 0.7,
-        }),
-      });
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'gpt-3.5-turbo',
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: inputValue }
+            ],
+            max_tokens: 300, // Reduced for free tier
+            temperature: 0.7,
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status}`);
+        if (!response.ok) {
+          if (response.status === 429 || response.status === 402) {
+            throw new Error("API quota exceeded. Try using Simple Mode instead.");
+          }
+          throw new Error(`OpenAI API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const assistantResponse = data.choices[0]?.message?.content || 'I apologize, but I was unable to generate a response.';
+
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          content: assistantResponse,
+          role: 'assistant',
+          timestamp: new Date()
+        };
+
+        setMessages(prev => [...prev, assistantMessage]);
       }
-
-      const data = await response.json();
-      const assistantResponse = data.choices[0]?.message?.content || 'I apologize, but I was unable to generate a response.';
-
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: assistantResponse,
-        role: 'assistant',
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, assistantMessage]);
 
     } catch (error) {
       console.error('Error sending message:', error);
+      
+      let errorMessage = "Failed to send message. ";
+      if (error.message.includes("quota") || error.message.includes("402")) {
+        errorMessage += "Your OpenAI API quota may be exceeded. Try using Simple Mode instead.";
+      } else {
+        errorMessage += "Please check your API key and try again, or use Simple Mode.";
+      }
+      
       toast({
         title: "Error",
-        description: "Failed to send message. Please check your API key and try again.",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -171,7 +211,7 @@ If the question cannot be answered from the provided context, politely mention t
       <CardHeader className="pb-2 flex flex-row items-center justify-between">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Bot className="h-5 w-5" />
-          AI Portfolio Assistant
+          Portfolio Assistant
         </CardTitle>
         <div className="flex gap-1">
           <Button
@@ -196,25 +236,48 @@ If the question cannot be answered from the provided context, politely mention t
           {!isApiKeySet ? (
             <div className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                Enter your OpenAI API key to start chatting:
+                Choose how you want to use the assistant:
               </p>
-              <Input
-                type="password"
-                placeholder="Enter OpenAI API key..."
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleApiKeySubmit()}
-              />
+              
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="simple-mode"
+                    checked={useSimpleMode}
+                    onChange={(e) => setUseSimpleMode(e.target.checked)}
+                    className="rounded border-gray-300"
+                  />
+                  <label htmlFor="simple-mode" className="text-sm">
+                    Use Simple Mode (No API key needed)
+                  </label>
+                </div>
+                
+                {!useSimpleMode && (
+                  <Input
+                    type="password"
+                    placeholder="Enter OpenAI API key for AI responses..."
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleApiKeySubmit()}
+                  />
+                )}
+              </div>
+              
               <Button onClick={handleApiKeySubmit} className="w-full">
-                Initialize AI Assistant
+                {useSimpleMode ? "Start Simple Mode" : "Initialize AI Assistant"}
               </Button>
+              
+              <p className="text-xs text-muted-foreground">
+                Simple Mode uses keyword matching to find relevant information from your documents without requiring an OpenAI API key.
+              </p>
             </div>
           ) : !isKnowledgeReady ? (
             <div className="flex items-center justify-center p-8">
               <div className="text-center">
                 <Bot className="h-12 w-12 mx-auto mb-4 text-muted-foreground animate-pulse" />
                 <p className="text-sm text-muted-foreground">
-                  Loading knowledge base ...
+                  Loading knowledge base...
                 </p>
               </div>
             </div>
@@ -241,7 +304,7 @@ If the question cannot be answered from the provided context, politely mention t
                         )}
                       </div>
                       <div
-                        className={`p-3 rounded-lg text-sm ${
+                        className={`p-3 rounded-lg text-sm whitespace-pre-line ${
                           message.role === 'user'
                             ? 'bg-primary text-primary-foreground'
                             : 'bg-muted'

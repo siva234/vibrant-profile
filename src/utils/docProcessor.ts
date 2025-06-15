@@ -1,20 +1,15 @@
 
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { OpenAIEmbeddings } from "@langchain/openai";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
-import { Document } from "langchain/document";
 import * as mammoth from "mammoth";
 
-export class DocKnowledgeBase {
-  private vectorStore: MemoryVectorStore | null = null;
-  private embeddings: OpenAIEmbeddings;
+export interface DocumentChunk {
+  content: string;
+  source: string;
+  chunkIndex: number;
+}
 
-  constructor(apiKey: string) {
-    this.embeddings = new OpenAIEmbeddings({
-      openAIApiKey: apiKey,
-      modelName: "text-embedding-ada-002",
-    });
-  }
+export class DocKnowledgeBase {
+  private documents: DocumentChunk[] = [];
+  private isReady = false;
 
   async initializeFromDataFolder(): Promise<void> {
     try {
@@ -27,8 +22,6 @@ export class DocKnowledgeBase {
         throw new Error("No Word document files found in the /data/ folder");
       }
 
-      const documents: Document[] = [];
-      
       // Process each Word document file
       for (const { fileName, arrayBuffer } of docFiles) {
         console.log(`Processing Word document: ${fileName}`);
@@ -38,42 +31,28 @@ export class DocKnowledgeBase {
           console.log(`Extracted ${textContent.length} characters from ${fileName}`);
           
           if (textContent.trim()) {
-            const doc = new Document({
-              pageContent: textContent,
-              metadata: {
+            // Split into smaller chunks for better processing
+            const chunks = this.splitTextIntoChunks(textContent, 1000);
+            chunks.forEach((chunk, index) => {
+              this.documents.push({
+                content: chunk,
                 source: fileName,
-                type: fileName.endsWith('.docx') ? 'docx' : 'doc',
-                length: textContent.length
-              }
+                chunkIndex: index
+              });
             });
-            documents.push(doc);
-            console.log(`Added document: ${fileName}`);
+            console.log(`Added ${chunks.length} chunks from ${fileName}`);
           }
         } catch (error) {
           console.error(`Error processing Word document ${fileName}:`, error);
         }
       }
 
-      if (documents.length === 0) {
+      if (this.documents.length === 0) {
         throw new Error("No documents were successfully processed from the /data/ folder");
       }
 
-      // Split documents into chunks
-      const textSplitter = new RecursiveCharacterTextSplitter({
-        chunkSize: 1000,
-        chunkOverlap: 200,
-      });
-
-      const splitDocs = await textSplitter.splitDocuments(documents);
-      console.log(`Created ${splitDocs.length} document chunks from ${docFiles.length} Word documents`);
-
-      // Create vector store
-      this.vectorStore = await MemoryVectorStore.fromDocuments(
-        splitDocs,
-        this.embeddings
-      );
-
-      console.log("Knowledge base initialized successfully from /data/ folder");
+      this.isReady = true;
+      console.log(`Knowledge base initialized with ${this.documents.length} document chunks from ${docFiles.length} Word documents`);
     } catch (error) {
       console.error("Error initializing knowledge base from /data/ folder:", error);
       throw error;
@@ -155,15 +134,61 @@ export class DocKnowledgeBase {
     }
   }
 
-  async searchRelevantContent(query: string, k: number = 3): Promise<Document[]> {
-    if (!this.vectorStore) {
+  private splitTextIntoChunks(text: string, chunkSize: number): string[] {
+    const chunks: string[] = [];
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    
+    let currentChunk = "";
+    
+    for (const sentence of sentences) {
+      if ((currentChunk + sentence).length <= chunkSize) {
+        currentChunk += sentence + ". ";
+      } else {
+        if (currentChunk.trim()) {
+          chunks.push(currentChunk.trim());
+        }
+        currentChunk = sentence + ". ";
+      }
+    }
+    
+    if (currentChunk.trim()) {
+      chunks.push(currentChunk.trim());
+    }
+    
+    return chunks;
+  }
+
+  searchRelevantContent(query: string, k: number = 3): DocumentChunk[] {
+    if (!this.isReady) {
       throw new Error("Knowledge base not initialized. Please try again.");
     }
 
     try {
       console.log(`Searching for: "${query}"`);
-      const results = await this.vectorStore.similaritySearch(query, k);
-      console.log(`Found ${results.length} relevant documents`);
+      
+      // Simple keyword-based search since we can't use embeddings
+      const queryWords = query.toLowerCase().split(/\s+/).filter(word => word.length > 2);
+      
+      const scoredChunks = this.documents.map(chunk => {
+        const content = chunk.content.toLowerCase();
+        let score = 0;
+        
+        // Score based on keyword matches
+        queryWords.forEach(word => {
+          const matches = (content.match(new RegExp(word, 'g')) || []).length;
+          score += matches;
+        });
+        
+        return { ...chunk, score };
+      });
+      
+      // Sort by score and return top k results
+      const results = scoredChunks
+        .filter(chunk => chunk.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, k);
+      
+      console.log(`Found ${results.length} relevant document chunks`);
       return results;
     } catch (error) {
       console.error("Error searching knowledge base:", error);
@@ -172,6 +197,10 @@ export class DocKnowledgeBase {
   }
 
   isInitialized(): boolean {
-    return this.vectorStore !== null;
+    return this.isReady;
+  }
+
+  getAllContent(): string {
+    return this.documents.map(doc => doc.content).join('\n\n');
   }
 }
