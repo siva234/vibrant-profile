@@ -4,7 +4,6 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { Document } from "langchain/document";
 import * as mammoth from "mammoth";
-import { Buffer } from "buffer";
 
 export class DocKnowledgeBase {
   private vectorStore: MemoryVectorStore | null = null;
@@ -85,14 +84,14 @@ export class DocKnowledgeBase {
     const docFiles: Array<{ fileName: string; arrayBuffer: ArrayBuffer }> = [];
     
     try {
-      // Extended list of common Word document filenames to try
-      const commonDocNames = [
-        'Venkata_Sai_Siva_Reddy.docx',
+      // Use the actual file names that exist in the public/data folder
+      const actualDocNames = [
+        'Venkata_Sai_Siva_Reddy_Reddy_-_.docx',
         'cl_siva_Ericsson.docx'
       ];
       
-      // Try to fetch each potential Word document file
-      for (const fileName of commonDocNames) {
+      // Try to fetch each Word document file
+      for (const fileName of actualDocNames) {
         try {
           console.log(`Attempting to fetch: /data/${fileName}`);
           const response = await fetch(`/data/${fileName}`);
@@ -121,29 +120,38 @@ export class DocKnowledgeBase {
       console.log(`Extracting text from ${fileName}...`);
       
       if (fileName.endsWith('.docx')) {
-        // Use mammoth for .docx files
-        const buffer = Buffer.from(arrayBuffer);
-        const result = await mammoth.extractRawText({ buffer });
+        // Convert ArrayBuffer to Uint8Array for mammoth
+        const uint8Array = new Uint8Array(arrayBuffer);
+        
+        console.log(`Processing ${fileName} with mammoth, size: ${uint8Array.length} bytes`);
+        
+        const result = await mammoth.extractRawText({ 
+          arrayBuffer: uint8Array.buffer
+        });
+        
         console.log(`Mammoth extraction result for ${fileName}:`, {
           textLength: result.value.length,
-          messages: result.messages
+          hasMessages: result.messages.length > 0
         });
         
         if (result.messages.length > 0) {
           console.warn(`Mammoth messages for ${fileName}:`, result.messages);
         }
         
+        if (!result.value || result.value.trim().length === 0) {
+          console.warn(`No text extracted from ${fileName}`);
+          return "";
+        }
+        
         return result.value;
       } else if (fileName.endsWith('.doc')) {
-        // For .doc files, we'll need to handle them differently
-        // Since .doc files are more complex binary format, we'll throw an error for now
         throw new Error(".doc files are not supported yet. Please convert to .docx format.");
       } else {
         throw new Error("Unsupported file format. Only .docx files are supported.");
       }
     } catch (error) {
-      console.error("Error extracting text from Word document:", error.message, error.stack);
-      throw new Error("Failed to extract text from Word document");
+      console.error("Error extracting text from Word document:", error);
+      throw new Error(`Failed to extract text from Word document: ${error.message}`);
     }
   }
 
