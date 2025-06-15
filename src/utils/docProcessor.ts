@@ -35,16 +35,19 @@ export class DocKnowledgeBase {
         
         try {
           const textContent = await this.extractTextFromDoc(arrayBuffer, fileName);
+          console.log(`Extracted ${textContent.length} characters from ${fileName}`);
           
           if (textContent.trim()) {
             const doc = new Document({
               pageContent: textContent,
               metadata: {
                 source: fileName,
-                type: fileName.endsWith('.docx') ? 'docx' : 'doc'
+                type: fileName.endsWith('.docx') ? 'docx' : 'doc',
+                length: textContent.length
               }
             });
             documents.push(doc);
+            console.log(`Added document: ${fileName}`);
           }
         } catch (error) {
           console.error(`Error processing Word document ${fileName}:`, error);
@@ -81,7 +84,7 @@ export class DocKnowledgeBase {
     const docFiles: Array<{ fileName: string; arrayBuffer: ArrayBuffer }> = [];
     
     try {
-      // Common Word document filenames to try (you can extend this list)
+      // Extended list of common Word document filenames to try
       const commonDocNames = [
         'Venkata_Sai_Siva_Reddy.docx',
         'Venkata_Sai_Siva_Reddy.doc',
@@ -90,35 +93,56 @@ export class DocKnowledgeBase {
         'cv.docx',
         'cv.doc',
         'portfolio.docx',
-        'portfolio.doc'
+        'portfolio.doc',
+        'profile.docx',
+        'profile.doc',
+        'about.docx',
+        'about.doc',
+        'bio.docx',
+        'bio.doc'
       ];
       
       // Try to fetch each potential Word document file
       for (const fileName of commonDocNames) {
         try {
+          console.log(`Attempting to fetch: /data/${fileName}`);
           const response = await fetch(`/data/${fileName}`);
+          
           if (response.ok) {
             const arrayBuffer = await response.arrayBuffer();
+            console.log(`Successfully fetched ${fileName} (${arrayBuffer.byteLength} bytes)`);
             docFiles.push({ fileName, arrayBuffer });
-            console.log(`Successfully fetched ${fileName}`);
+          } else {
+            console.log(`File ${fileName} returned status: ${response.status}`);
           }
         } catch (error) {
-          // Silently ignore 404s and other fetch errors for discovery
-          console.log(`File ${fileName} not found, skipping...`);
+          console.log(`File ${fileName} not found or error fetching:`, error);
         }
       }
     } catch (error) {
       console.error("Error discovering Word documents:", error);
     }
     
+    console.log(`Found ${docFiles.length} Word document files`);
     return docFiles;
   }
 
   private async extractTextFromDoc(arrayBuffer: ArrayBuffer, fileName: string): Promise<string> {
     try {
+      console.log(`Extracting text from ${fileName}...`);
+      
       if (fileName.endsWith('.docx')) {
         // Use mammoth for .docx files
         const result = await mammoth.extractRawText({ arrayBuffer });
+        console.log(`Mammoth extraction result for ${fileName}:`, {
+          textLength: result.value.length,
+          messages: result.messages
+        });
+        
+        if (result.messages.length > 0) {
+          console.warn(`Mammoth messages for ${fileName}:`, result.messages);
+        }
+        
         return result.value;
       } else if (fileName.endsWith('.doc')) {
         // For .doc files, we'll need to handle them differently
@@ -128,8 +152,8 @@ export class DocKnowledgeBase {
         throw new Error("Unsupported file format. Only .docx files are supported.");
       }
     } catch (error) {
-      console.error("Error extracting text from Word document:", error);
-      throw new Error("Failed to extract text from Word document");
+      console.error(`Error extracting text from Word document ${fileName}:`, error);
+      throw new Error(`Failed to extract text from Word document: ${error.message}`);
     }
   }
 
@@ -139,7 +163,9 @@ export class DocKnowledgeBase {
     }
 
     try {
+      console.log(`Searching for: "${query}"`);
       const results = await this.vectorStore.similaritySearch(query, k);
+      console.log(`Found ${results.length} relevant documents`);
       return results;
     } catch (error) {
       console.error("Error searching knowledge base:", error);
