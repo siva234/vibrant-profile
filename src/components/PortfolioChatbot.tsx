@@ -214,7 +214,7 @@ If the question cannot be answered from the provided context, politely mention t
               <div className="text-center">
                 <Bot className="h-12 w-12 mx-auto mb-4 text-muted-foreground animate-pulse" />
                 <p className="text-sm text-muted-foreground">
-                  Loading knowledge base from data folder...
+                  Loading knowledge base ...
                 </p>
               </div>
             </div>

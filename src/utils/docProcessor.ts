@@ -3,7 +3,8 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { Document } from "langchain/document";
-import mammoth from "mammoth";
+import * as mammoth from "mammoth";
+import { Buffer } from "buffer";
 
 export class DocKnowledgeBase {
   private vectorStore: MemoryVectorStore | null = null;
@@ -84,13 +85,7 @@ export class DocKnowledgeBase {
       // Common Word document filenames to try (you can extend this list)
       const commonDocNames = [
         'Venkata_Sai_Siva_Reddy.docx',
-        'Venkata_Sai_Siva_Reddy.doc',
-        'resume.docx',
-        'resume.doc',
-        'cv.docx',
-        'cv.doc',
-        'portfolio.docx',
-        'portfolio.doc'
+        'cl_siva_Ericsson.docx'
       ];
       
       // Try to fetch each potential Word document file
@@ -118,7 +113,8 @@ export class DocKnowledgeBase {
     try {
       if (fileName.endsWith('.docx')) {
         // Use mammoth for .docx files
-        const result = await mammoth.extractRawText({ arrayBuffer });
+        const buffer = Buffer.from(arrayBuffer);
+        const result = await mammoth.extractRawText({ buffer });
         return result.value;
       } else if (fileName.endsWith('.doc')) {
         // For .doc files, we'll need to handle them differently
@@ -128,7 +124,7 @@ export class DocKnowledgeBase {
         throw new Error("Unsupported file format. Only .docx files are supported.");
       }
     } catch (error) {
-      console.error("Error extracting text from Word document:", error);
+      console.error("Error extracting text from Word document:", error.message, error.stack);
       throw new Error("Failed to extract text from Word document");
     }
   }
