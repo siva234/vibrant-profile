@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -196,7 +195,7 @@ If the question cannot be answered from the provided context, politely mention t
     return (
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-lg hover:shadow-xl transition-all duration-300 z-50"
+        className="fixed bottom-20 right-6 rounded-full w-14 h-14 shadow-lg hover:shadow-xl transition-all duration-300 z-50"
         size="icon"
       >
         <MessageCircle className="h-6 w-6" />
@@ -205,7 +204,7 @@ If the question cannot be answered from the provided context, politely mention t
   }
 
   return (
-    <Card className={`fixed bottom-6 right-6 w-96 shadow-xl z-50 transition-all duration-300 ${
+    <Card className={`fixed bottom-20 right-6 w-96 shadow-xl z-50 transition-all duration-300 ${
       isMinimized ? 'h-16' : 'h-[600px]'
     }`}>
       <CardHeader className="pb-2 flex flex-row items-center justify-between">
