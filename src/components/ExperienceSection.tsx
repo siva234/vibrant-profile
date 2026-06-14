@@ -21,52 +21,68 @@ interface Experience {
 
 const experiences: Experience[] = [
   {
+    company: "Qopla AB",
+    role: "Full-Stack Developer / Scrum Master",
+    period: "Oct 2025 - Present",
+    description: "Developing end-to-end features across a React, TypeScript and NestJS stack, owning user stories from the UI through to backend integration. Architected and rebuilt the legacy email services and modernised the UI/UX templates, improving processing efficiency and maintainability. Proposed, designed and currently building an internal onboarding tool as the sole developer and Scrum Master, running short sprint iterations with a Claude-based AI agentic setup to apply AI where it brings real delivery value.",
+    industry: "Restaurant / POS SaaS",
+    technologies: ["React", "TypeScript", "JavaScript", "NestJS", "GraphQL", "MongoDB", "Java", "Kafka", "AWS", "Bash", "Git", "Scrum", "AI Agentic Tools"]
+  },
+  {
+    company: "Independent Game Studio",
+    role: "Founder & Game Designer",
+    period: "2025",
+    description: "Founded and led a small studio (two developers and two artists) building a mobile and PC (Steam) game. Owned game design, level design, balancing and market research, and used generative AI extensively for character, skin and level art to ship more with a lean team. The project ended before release after the investor withdrew funding.",
+    industry: "Gaming / Startup",
+    technologies: ["Game Design", "Level Design", "Game Balancing", "Market Research", "Generative AI", "Team Leadership"]
+  },
+  {
     company: "Sigma Technology AB",
-    role: "Full-Stack Developer/ Lead Developer/ Scrum Master",
+    role: "Full-Stack Developer / Lead Developer / Scrum Master",
     period: "June 2021 - Jan 2025",
     workDetails: [
       {
         title: "Client: Ericsson AB",
-        description: "Working as a full-stack developer on tools supporting technical documentation workflows. Focused on frontend development using VanillaJS and Hugo, with backend contributions in Python and deployments on Azure.  Independently used Figma to design and implement user interfaces. Supporting the team as Scrum Master when needed, helping drive agile collaboration and task ownership.",
+        description: "Worked as a full-stack developer on tools supporting technical documentation workflows. Focused on frontend development using VanillaJS and Hugo, with backend contributions in Python and deployments on Azure. Independently used Figma to design and implement user interfaces. Supported the team as Scrum Master when needed, helping drive agile collaboration and task ownership.",
         type: "client"
       },
       {
         title: "Internal Projects at Sigma",
-        description: "Contributed to internal tools and initiatives while awaiting next client assignment.",
+        description: "Contributed to internal tools and initiatives while awaiting the next client assignment.",
         type: "internal"
       },
       {
         title: "Client: Telia AB",
-        description: "Developed and maintained an internal web application critical to Telia's support systems, using VueJS and ReactJS. Acted as lead developer, responsible for on-boarding and mentoring new developers. Introduced developer productivity improvements, including custom Bash scripts to simplify daily workflows. Took the initiative to enhance team culture, organizing activities like weekly football sessions to strengthen collaboration. Participated in UX discussions and occasionally contributed to UI/UX improvements. Temporarily stepped in as Scrum Master, facilitating sprints and maintaining delivery momentum.",
+        description: "Developed and maintained an internal web application critical to Telia's customer-support operations, using VueJS and ReactJS. Acted as lead developer, responsible for onboarding and mentoring new developers and running regular code reviews. Introduced developer productivity improvements, including custom Bash scripts to simplify daily workflows. Took the initiative to enhance team culture, organising activities like weekly football sessions to strengthen collaboration. Participated in UX discussions and contributed to UI/UX improvements. Stepped in as Scrum Master, facilitating sprints and maintaining delivery momentum.",
         type: "client"
       }
     ],
     industry: "Consultancy, Telecom",
-    technologies: ["JavaScript", "Typescript", "React", "Vue", "Hugo", "Java", "Springboot", "Python", "Docker", "Bash", "Wsl", "MongoDB", "AWS", "Azure", "Maven", "Git", "Jira", "Scrum", "Microservice Architecture"]
+    technologies: ["JavaScript", "TypeScript", "React", "Vue", "Hugo", "Java", "Spring Boot", "Python", "Docker", "Bash", "WSL", "MongoDB", "AWS", "Azure", "Maven", "Git", "Jira", "Scrum", "Microservice Architecture"]
   },
   {
     company: "Tink AB",
     role: "Software Developer",
-    period: "Feb 2021 - May 2021",
-    description: "As part of the Agile team, Siva developed and maintained a web platform called console for all the products in Tink. Siva was also responsible for setting up regular team syncs, summarized weekly planning decisions, and followed up on them.",
+    period: "Feb 2021 - Apr 2021",
+    description: "As part of the agile team, developed and maintained Console, the central web platform supporting all of Tink's products. Set up regular team syncs, summarised weekly planning decisions and followed up on them.",
     industry: "Fintech",
-    technologies: ["JavaScript", "Typescript", "React", "Node", "Git", "Jira", "Scrum", "Kanban", "Microservice Architecture"]
+    technologies: ["JavaScript", "TypeScript", "React", "Node.js", "Git", "Jira", "Scrum", "Kanban", "Microservice Architecture"]
   },
   {
     company: "Adventure Box Technology AB",
     role: "Software Developer",
-    period: "Feb 2020 - Aug 2020",
-    description: "As part of the Scrum-based team Siva developed and maintained adventurebox.com, a web platform for developing, publishing and playing voxel games for all age groups. He built the modifed homepage completely based on React.",
+    period: "Mar 2020 - Aug 2020",
+    description: "As part of a Scrum-based team, developed and maintained adventurebox.com, a web platform for developing, publishing and playing voxel games for all age groups. Built the redesigned homepage entirely in React, delivering responsive, accessible UI across devices and age groups.",
     industry: "Gaming",
-    technologies: ["JavaScript", "Typescript", "React", "Java", "Docker", "Bash", "MongoDB", "AWS", "Maven", "Git", "Jira", "Scrum", "Microservice Architecture"]
+    technologies: ["JavaScript", "TypeScript", "React", "Java", "Docker", "Bash", "MongoDB", "AWS", "Maven", "Git", "Jira", "Scrum", "Microservice Architecture"]
   },
   {
     company: "HMS Industrial Networks AB",
     role: "Software Developer",
     period: "Jan 2018 - Feb 2020",
-    description: "As part of the Scrum-based team Siva developed and maintained Netbiter, a web platform (system based on micro-services using REST API) for monitoring and controlling data from HMS IoT products deployed in industrial precision systems. He also built a test environment for simulating real-time conditions for our IoT products with the new updates.He worked with DevOps deployments, auto-scaling, certifcations, etc on AWS. And automated some daily tasks in the team with bash scripts.",
+    description: "As part of a Scrum-based team, developed and maintained Netbiter, a microservices web platform (REST APIs) for monitoring and controlling data from HMS IoT products deployed in industrial precision systems. Built a test environment for simulating real-time conditions for new product updates, handled DevOps deployments, auto-scaling and certifications on AWS, and automated routine team tasks with Bash scripts.",
     industry: "IoT",
-    technologies: ["Java", "SpringBoot", "Docker", "Bash", "Sql", "Aws", "Maven", "Git", "Jenkins", "Swagger", "Jira", "Scrum", "Microservice Architecture"]
+    technologies: ["Java", "Spring Boot", "Docker", "Bash", "SQL", "AWS", "Maven", "Git", "Jenkins", "Swagger", "Jira", "Scrum", "Microservice Architecture"]
   }
 ];
 
@@ -75,10 +91,10 @@ const ExperienceSection = () => {
     <section id="experience" className="py-20">
       <div className="container mx-auto px-4">
         <h2 className="section-heading">Experience</h2>
-        
+
         <div className="space-y-8">
           {experiences.map((exp, index) => (
-            <Card 
+            <Card
               key={exp.company}
               className="border hover:shadow-md transition-all duration-300 overflow-hidden group"
             >
@@ -97,14 +113,14 @@ const ExperienceSection = () => {
               </CardHeader>
               <CardContent className="p-6">
                 {exp.description && <p className="mb-4">{exp.description}</p>}
-                
+
                 {exp.workDetails && (
                   <div className="space-y-6 mb-6">
                     {exp.workDetails.map((work, idx) => (
                       <div key={idx} className="space-y-2">
                         <div className="flex items-center gap-2 text-lg font-medium">
-                          {work.type === "client" ? 
-                            <Briefcase className="h-5 w-5" /> : 
+                          {work.type === "client" ?
+                            <Briefcase className="h-5 w-5" /> :
                             <Building className="h-5 w-5" />
                           }
                           {work.title}
@@ -114,7 +130,7 @@ const ExperienceSection = () => {
                     ))}
                   </div>
                 )}
-                
+
                 <div className="flex flex-wrap gap-2 mt-4">
                   {exp.technologies.map((tech) => (
                     <Badge key={tech} variant="secondary" className="text-xs">
