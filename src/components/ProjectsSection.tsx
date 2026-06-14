@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,28 +6,25 @@ import { ExternalLink, Github } from "lucide-react";
 const ProjectsSection = () => {
   const projects = [
     {
-      title: "E-Commerce Platform",
-      description: "Full-stack e-commerce solution with React, Node.js, and PostgreSQL",
-      technologies: ["React", "Node.js", "PostgreSQL", "Stripe"],
-      github: "https://github.com",
-      demo: "https://demo.com",
-      image: "/placeholder.svg"
+      title: "AI-Agentic Onboarding Tool",
+      description: "Internal tool to speed up company onboarding at Qopla — proposed, designed and built solo, using a Claude-based multi-agent setup to drive development across short sprint iterations.",
+      technologies: ["React", "TypeScript", "NestJS", "AI Agents"],
+      github: "",
+      demo: ""
     },
     {
-      title: "Task Management App",
-      description: "Collaborative task management tool with real-time updates",
-      technologies: ["React", "Firebase", "Material-UI"],
-      github: "https://github.com",
-      demo: "https://demo.com",
-      image: "/placeholder.svg"
+      title: "Indie Game — Studio Founder",
+      description: "Mobile and PC (Steam) game built with a small founder-led team of developers and artists. Led game design, level design and balancing, using generative AI for characters, skins and level art. Unreleased after investor funding was withdrawn.",
+      technologies: ["Game Design", "Level Design", "Generative AI", "Team Leadership"],
+      github: "",
+      demo: ""
     },
     {
-      title: "Weather Dashboard",
-      description: "Interactive weather dashboard with data visualization",
-      technologies: ["React", "D3.js", "OpenWeather API"],
-      github: "https://github.com",
-      demo: "https://demo.com",
-      image: "/placeholder.svg"
+      title: "Netbiter — Industrial IoT Platform",
+      description: "Microservices web platform (REST APIs) for monitoring and controlling HMS IoT devices in industrial environments, including a real-time test environment and AWS deployments with auto-scaling.",
+      technologies: ["Java", "Spring Boot", "AWS", "Docker"],
+      github: "",
+      demo: ""
     }
   ];
 
@@ -38,7 +34,8 @@ const ProjectsSection = () => {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4">Featured Projects</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Here are some of my recent projects that showcase my skills and experience
+            A selection of work across my career. Most of it is proprietary —
+            code and demos are available on request.
           </p>
         </div>
 
@@ -58,16 +55,26 @@ const ProjectsSection = () => {
                     </Badge>
                   ))}
                 </div>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline" className="flex-1">
-                    <Github className="w-4 h-4 mr-2" />
-                    Code
-                  </Button>
-                  <Button size="sm" className="flex-1">
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    Demo
-                  </Button>
-                </div>
+                {(project.github || project.demo) && (
+                  <div className="flex gap-2">
+                    {project.github && (
+                      <Button asChild size="sm" variant="outline" className="flex-1">
+                        <a href={project.github} target="_blank" rel="noopener noreferrer">
+                          <Github className="w-4 h-4 mr-2" />
+                          Code
+                        </a>
+                      </Button>
+                    )}
+                    {project.demo && (
+                      <Button asChild size="sm" className="flex-1">
+                        <a href={project.demo} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Demo
+                        </a>
+                      </Button>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}
