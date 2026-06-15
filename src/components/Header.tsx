@@ -85,6 +85,13 @@ const Header = () => {
         <div className="flex items-center gap-4">
           <ThemeToggle />
           <a
+            href="/Siva-Kolli-CV.pdf"
+            download
+            className="hidden md:inline-flex border border-primary text-primary hover:bg-primary/10 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+          >
+            Download CV
+          </a>
+          <a
             href="#contact"
             className="hidden md:inline-flex bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
             onClick={(e) => {
