@@ -10,11 +10,11 @@ interface SkillCategory {
 const skillCategories: SkillCategory[] = [
   {
     name: "Frontend",
-    skills: ["React", "Vue", "TypeScript", "HTML", "CSS", "JavaScript", "Redux", "Hugo", "Tailwind CSS"]
+    skills: ["React", "Next.js", "TypeScript", "JavaScript", "Redux", "React Router", "Vue", "HTML", "CSS", "Tailwind CSS", "Hugo"]
   },
   {
     name: "Backend",
-    skills: ["Java", "Spring Boot", "Maven", "Node.js", "Express", "Python", "REST APIs"]
+    skills: ["Node.js", "NestJS", "Express", "Java", "Spring Boot", "Python", "REST APIs", "GraphQL", "Kafka", "Maven"]
   },
   {
     name: "DevOps",
@@ -22,15 +22,15 @@ const skillCategories: SkillCategory[] = [
   },
   {
     name: "Database",
-    skills: ["MongoDB", "PostgreSQL", "MySQL", "H2"]
+    skills: ["MongoDB", "PostgreSQL", "MySQL", "Cassandra", "H2"]
   },
   {
     name: "Cloud",
-    skills: ["Azure", "AWS", "GCP"]
+    skills: ["AWS", "Azure", "GCP"]
   },
   {
     name: "Other",
-    skills: ["Scrum", "Microservices", "Jira", "Figma", "Ai Tools"]
+    skills: ["Scrum", "Microservices", "Jira", "Figma", "AI Agentic Workflows"]
   }
 ];
 
@@ -39,7 +39,7 @@ const SkillsSection = () => {
     <section id="skills" className="py-20 bg-muted/50">
       <div className="container mx-auto px-4">
         <h2 className="section-heading">My Skills</h2>
-        
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {skillCategories.map((category, index) => (
             <Card key={category.name} className="backdrop-blur-sm border hover:shadow-md transition-shadow overflow-hidden">
@@ -49,8 +49,8 @@ const SkillsSection = () => {
               <CardContent className="p-6">
                 <div className="flex flex-wrap gap-2">
                   {category.skills.map((skill) => (
-                    <Badge 
-                      key={skill} 
+                    <Badge
+                      key={skill}
                       variant="secondary"
                       className="px-3 py-1 text-sm transition-all duration-300 hover:bg-primary hover:text-white"
                     >

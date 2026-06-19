@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Github, Linkedin, Mail, Phone, SendIcon } from "lucide-react";
+import { Github, Linkedin, Mail, MapPin, SendIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import emailjs from '@emailjs/browser';
 
@@ -100,13 +100,11 @@ const ContactSection = () => {
               <Card className="border hover:border-primary/50 transition-colors overflow-hidden">
                 <CardContent className="p-4 flex items-center gap-4">
                   <div className="bg-primary/10 p-3 rounded-full">
-                    <Phone className="h-6 w-6 text-primary" />
+                    <MapPin className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Phone</p>
-                    <a href="tel:+46767852585" className="font-medium hover:text-primary transition-colors">
-                      +46767852585
-                    </a>
+                    <p className="text-sm text-muted-foreground">Location</p>
+                    <span className="font-medium">Stockholm, Sweden</span>
                   </div>
                 </CardContent>
               </Card>
