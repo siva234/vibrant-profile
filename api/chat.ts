@@ -1,10 +1,19 @@
 // Serverless chat proxy for the portfolio assistant (runs on Vercel).
-// Uses the site owner's OpenAI key from the OPENAI_API_KEY env var, so
-// visitors never need a key. Guardrails: per-IP rate limiting, input caps,
-// short responses, cheap model, and a knowledge-grounded system prompt.
+// Uses a free, OpenAI-compatible provider so visitors never need a key.
 //
-// Set OPENAI_API_KEY in the Vercel project (Settings -> Environment Variables)
-// and a monthly budget cap in the OpenAI dashboard.
+// DEFAULT PROVIDER: Groq (free, no credit card). Get a key at https://console.groq.com
+// and add it to Vercel as GROQ_API_KEY (Settings -> Environment Variables).
+//
+// To switch providers, change the three PROVIDER constants below:
+//   OpenAI     -> URL https://api.openai.com/v1/chat/completions      | model "gpt-4o-mini"
+//                 | key process.env.OPENAI_API_KEY
+//   OpenRouter -> URL https://openrouter.ai/api/v1/chat/completions   | model "meta-llama/llama-3.3-70b-instruct:free"
+//                 | key process.env.OPENROUTER_API_KEY
+// (Gemini uses a different request format and would need more changes.)
+
+const API_URL = "https://api.groq.com/openai/v1/chat/completions";
+const MODEL = "llama-3.3-70b-versatile";
+const API_KEY = process.env.GROQ_API_KEY;
 
 // ---- Curated knowledge (verified facts only; no phone/personal data) ----
 const KNOWLEDGE = `
@@ -94,7 +103,7 @@ export default async function handler(req: any, res: any) {
     res.status(405).json({ error: "Method not allowed" });
     return;
   }
-  if (!process.env.OPENAI_API_KEY) {
+  if (!API_KEY) {
     res.status(500).json({ error: "Server is not configured (missing API key)." });
     return;
   }
@@ -127,14 +136,14 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const r = await fetch("https://api.openai.com/v1/chat/completions", {
+    const r = await fetch(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        Authorization: `Bearer ${API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: MODEL,
         messages: [{ role: "system", content: SYSTEM_PROMPT }, ...history],
         max_tokens: 300,
         temperature: 0.5,
