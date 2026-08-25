@@ -9,11 +9,17 @@ const AboutSection = () => {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <p className="text-lg">
-              Dynamic full-stack developer with eight years of experience driving impactful web applications and
-              tools across diverse industries. Proficient in front-end and back-end technologies such as React,
-              TypeScript, and Node.js, delivering solutions that enhance user experience and operational efficiency.
-              Adept in Agile and DevOps methodologies, demonstrating strong leadership through team training and
-              process improvement initiatives. Committed to continuous learning and adapting to new technologies, contributing to innovative project outcomes while fostering collaborative team environments.
+              I am a full-stack developer in Stockholm with just over eight years of experience. Most of my work
+              has been in React and TypeScript on the front end, with Node, Java and Python behind it, and I am
+              comfortable handling my own deployments on AWS and Azure. I have worked in telecom, industrial IoT,
+              fintech, gaming and now restaurant SaaS.
+            </p>
+            <p className="text-lg">
+              At Qopla I am building an internal CRM from scratch. I am the product owner and the developer on it,
+              so I decide what gets built and then build it. It is in production with real customer data. Before
+              that I was lead developer in a team of 22 at Telia, where I onboarded new engineers and did a lot of
+              the code review. In 2025 I ran my own game project, hired a small team and took it to soft launch
+              beta before the investor withdrew.
             </p>
           </div>
 

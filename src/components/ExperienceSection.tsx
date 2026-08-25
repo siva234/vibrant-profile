@@ -24,17 +24,17 @@ const experiences: Experience[] = [
     company: "Qopla AB",
     role: "Full-Stack Developer / Scrum Master",
     period: "Oct 2025 - Present",
-    description: "Developing end-to-end features across a React, TypeScript and NestJS stack, owning user stories from the UI through to backend integration. Architected and rebuilt the legacy email services and modernised the UI/UX templates, improving processing efficiency and maintainability. Proposed, designed and currently building an internal onboarding tool as the sole developer and Scrum Master, running short sprint iterations with a Claude-based AI agentic setup to apply AI where it brings real delivery value.",
+    description: "Building Qopla's internal CRM from scratch. React and TypeScript on the front end, NestJS behind it. I am product owner, manager and developer on it, so I set the scope and priorities and then write the code. It is in production with real customer data. The onboarding and hardware teams use it today, around 10 people, and sales and support are next, roughly 30 more users. I built it using an agentic AI workflow with MCP servers I set up myself. Tests are in Jest and Playwright. I also rebuilt the legacy email service and its templates, which is faster now and far easier to maintain. On call one week in every few.",
     industry: "Restaurant / POS SaaS",
-    technologies: ["React", "TypeScript", "JavaScript", "NestJS", "GraphQL", "MongoDB", "Java", "Kafka", "AWS", "Bash", "Git", "Scrum", "AI Agentic Tools"]
+    technologies: ["React", "TypeScript", "JavaScript", "NestJS", "GraphQL", "MongoDB", "Java", "Kafka", "AWS", "Jest", "Playwright", "Bash", "Git", "Scrum", "Agentic AI workflows", "MCP servers"]
   },
   {
-    company: "Independent Game Studio",
+    company: "Independent Game Project",
     role: "Founder & Game Designer",
-    period: "2025",
-    description: "Founded and led a small studio (two developers and two artists) building a mobile and PC (Steam) game. Owned game design, level design, balancing and market research, and used generative AI extensively for character, skin and level art to ship more with a lean team. The project ended before release after the investor withdrew funding.",
+    period: "Jan 2025 - Sept 2025",
+    description: "Designed a mobile game and built it in Unity. I hired and managed the team: a senior developer and a group of artists working on the character and boss sprites. I handled game design, level design and balancing, did the market research, and made some of the art myself using digital and AI tools. We reached soft launch beta. The investor then withdrew and I wound the project up.",
     industry: "Gaming / Startup",
-    technologies: ["Game Design", "Level Design", "Game Balancing", "Market Research", "Generative AI", "Team Leadership"]
+    technologies: ["Unity", "Game Design", "Level Design", "Game Balancing", "Market Research", "Generative AI", "Hiring", "Team Leadership"]
   },
   {
     company: "Sigma Technology AB",

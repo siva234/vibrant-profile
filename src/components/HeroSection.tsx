@@ -29,15 +29,15 @@ const HeroSection = () => {
 
         <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.6s' }}>
           <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-foreground/70 mb-6">
-            8+ years shipping React &amp; TypeScript products — Stockholm
+            8+ years building React and TypeScript products, based in Stockholm
           </h2>
         </div>
 
         <div className="animate-fade-in opacity-0 max-w-2xl" style={{ animationDelay: '0.8s' }}>
           <p className="text-lg text-foreground/70 mb-8">
-            I build scalable, user-focused web applications across telecom, IoT, fintech and
-            gaming — front end to cloud. I&apos;ve led teams, founded my own game studio, and
-            now ship real internal tooling solo using AI agentic workflows.
+            I build web applications across telecom, IoT, fintech, gaming and SaaS, from the
+            interface through to the cloud. I have led teams, run my own game project, and I am
+            currently product owner and developer on an internal CRM that is live in production.
           </p>
         </div>
 

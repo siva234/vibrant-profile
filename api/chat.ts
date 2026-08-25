@@ -20,24 +20,29 @@ const KNOWLEDGE = `
 ABOUT SIVA KOLLI
 Full name: Venkata Sai Siva Reddy Kolli, goes by "Siva". Based in Stockholm, Sweden. Swedish citizen.
 Senior full-stack engineer with 8+ years building scalable, user-focused web applications across
-telecom, IoT, fintech, gaming and restaurant/POS SaaS. Strong on the front end (React, Next.js,
-TypeScript) and back end (Node.js/NestJS, Java/Spring Boot, Python), with hands-on DevOps and cloud
+telecom, IoT, fintech, gaming and restaurant/POS SaaS. Strong on the front end (React, TypeScript)
+and back end (Node.js/NestJS, Java/Spring Boot, Python), with hands-on DevOps and cloud
 (AWS, Azure, GCP). Experienced team lead, mentor and Scrum Master, a former startup founder, and an
-early practical adopter of AI agentic tooling in real delivery.
+early practical adopter of AI agentic tooling in real delivery work.
+NOTE: Siva has NOT used Next.js. Never claim that he has. NestJS is a backend framework and is a
+different thing entirely; he uses NestJS at Qopla.
 Contact: email siva.kolli1993@gmail.com. Links: LinkedIn (linkedin.com/in/sivareddykolli),
 portfolio sivakolli.com, GitHub github.com/siva234. Open to new opportunities.
 
 EXPERIENCE
 Qopla AB - Stockholm (Oct 2025 - Present), Full-Stack Developer / Scrum Master.
-Develops end-to-end features across a React, TypeScript and NestJS stack. Architected and rebuilt the
-legacy email services and modernised the UI/UX templates. Proposed, designed and is building an
-internal onboarding tool as the sole developer and Scrum Master, running short sprint iterations with
-a Claude-based AI agentic setup. Stack: React, TypeScript, NestJS, GraphQL, MongoDB, Java, Kafka, AWS.
+Building Qopla's internal CRM from scratch: React and TypeScript on the front end, NestJS behind it.
+He is product owner, manager and developer on it. The CRM is in production with real customer data,
+used by the onboarding and hardware teams (around 10 people), with sales and support next (roughly 30
+more users). Built using an agentic AI workflow with MCP servers he configured himself. Tests in Jest
+and Playwright. Also rebuilt the legacy email service and its templates. Takes on-call one week in
+every few. Stack: React, TypeScript, NestJS, GraphQL, MongoDB, Java, Kafka, AWS.
 
-Independent Game Studio (2025), Founder & Game Designer.
-Founded and led a small studio (two developers, two artists) building a mobile and PC (Steam) game.
-Owned game design, level design, balancing and market research, and used generative AI for character,
-skin and level art. The project ended before release after the investor withdrew funding.
+Independent game project (Jan 2025 - Sept 2025), Founder & Game Designer.
+Designed a mobile game and built it in Unity. Hired and managed the team: a senior developer and a
+group of artists working on character and boss sprites. Owned game design, level design, balancing
+and market research, and made some of the art himself using digital and AI tools. Reached soft launch
+beta. The project ended when the investor withdrew funding. Do not name the game.
 
 Sigma Technology AB - Stockholm (Jun 2021 - Jan 2025), Full-Stack / Lead Developer / Scrum Master (consultancy).
 - Telia AB (Oct 2021 - Sep 2023): Built and maintained an internal web app critical to customer-support
@@ -59,7 +64,8 @@ Built and maintained Netbiter, a microservices web platform monitoring industria
 real-time test environment and AWS deployments with auto-scaling and CI/CD.
 
 SKILLS
-Frontend: React, Next.js, TypeScript, JavaScript, Redux, React Router, Vue, HTML, CSS, Tailwind CSS, Hugo.
+Frontend: React, TypeScript, JavaScript, Redux, React Router, Vue, HTML, CSS, Tailwind CSS, Vite, Hugo.
+Testing: Jest, React Testing Library, Playwright.
 Backend: Node.js, NestJS, Express, Java, Spring Boot, Python, REST APIs, GraphQL, Kafka, Maven.
 DevOps: Bash, Docker, Git, CI/CD, Jenkins, Linux. Cloud: AWS, Azure, GCP.
 Databases: MongoDB, PostgreSQL, MySQL, Cassandra. Other: Scrum, microservices, Jira, Figma, AI agentic workflows.
