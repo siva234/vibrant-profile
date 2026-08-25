@@ -24,6 +24,23 @@ interface Repo {
 const prettyName = (name: string) =>
   name.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
+// GitHub repo descriptions are plain text, but people often type markdown into
+// them. Strip the common markers so we don't render literal ** or ` on the page.
+const cleanDescription = (raw: string | null): string | null => {
+  if (!raw) return null;
+  const text = raw
+    .replace(/`{1,3}([^`]+)`{1,3}/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/(^|\s)\*([^*\s][^*]*)\*/g, "$1$2")
+    .replace(/(^|\s)_([^_\s][^_]*)_/g, "$1$2")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/[*_`]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!text) return null;
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+
 const ProjectsSection = () => {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [status, setStatus] = useState<"loading" | "done" | "error">("loading");
@@ -62,7 +79,7 @@ const ProjectsSection = () => {
           <h2 className="text-4xl font-bold mb-4">Projects</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Open-source work and experiments, pulled live from my GitHub. Most of my
-            professional work is proprietary — happy to walk through it on request.
+            professional work is proprietary, so I am happy to walk through it on request.
           </p>
         </div>
 
@@ -100,7 +117,8 @@ const ProjectsSection = () => {
                     )}
                   </CardTitle>
                   <CardDescription>
-                    {repo.description || "No description provided."}
+                    {cleanDescription(repo.description) ||
+                      `A ${repo.language || "code"} project. Source on GitHub.`}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4 mt-auto">

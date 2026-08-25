@@ -12,7 +12,9 @@
 // (Gemini uses a different request format and would need more changes.)
 
 const API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const MODEL = "llama-3.3-70b-versatile";
+// llama-3.3-70b-versatile was deprecated by Groq on 2026-06-17 and stopped being
+// served in August 2026. See https://console.groq.com/docs/deprecations
+const MODEL = "openai/gpt-oss-120b";
 const API_KEY = process.env.GROQ_API_KEY;
 
 // ---- Curated knowledge (verified facts only; no phone/personal data) ----
